@@ -182,8 +182,8 @@ export class ModerationEnforcement {
 			}
 
 			await gMember.send(new RichEmbed()
-				.setAuthor(this.msg.guild.name, this.msg.guild.iconURL)
-				.setTitle("**Kicked**")
+				.setAuthor(this.msg.client.user, this.msg.client.user.id)
+				.setTitle("👢 **Kicked**")
 				.setDescription(`You have been kicked from **${this.msg.guild.name}**.`)
 				.addField("**Moderator**", `${this.msg.client.user} (${this.msg.client.user.id})`)
 				.addField("**Reason**", reason)
@@ -194,7 +194,8 @@ export class ModerationEnforcement {
 			// mod log it
 			if (ModerationEnforcement.configuredModLogs(this.msg, this.res)) {
 				const embed: RichEmbed = new RichEmbed()
-					.setTitle("**AutoMod Kick**")
+					.setAuthor(this.msg.client.user, this.msg.client.user.id)
+					.setTitle("👢 **AutoMod Kick**")
 					.setDescription("A member has been kicked from the server for activating automoderation.")
 					.addField("Moderator", `${this.msg.client.user} (${this.msg.client.user.id})`)
 					.addField("Reason", reason)
@@ -223,8 +224,8 @@ export class ModerationEnforcement {
 			}
 
 			await gMember.send(new RichEmbed()
-				.setAuthor(this.msg.guild.name, this.msg.guild.iconURL)
-				.setTitle("**Banned**")
+				.setAuthor(this.msg.client.user, this.msg.client.user.id)
+				.setTitle("🔨 **Banned**")
 				.setDescription(`You have been banned from **${this.msg.guild.name}**.`)
 				.addField("**Moderator**", `${this.msg.client.user} (${this.msg.client.user.id})`)
 				.addField("**Reason**", reason)
@@ -235,7 +236,8 @@ export class ModerationEnforcement {
 			// mod log it
 			if (ModerationEnforcement.configuredModLogs(this.msg, this.res)) {
 				const embed: RichEmbed = new RichEmbed()
-					.setTitle("**AutoMod Ban**")
+					.setAuthor(this.msg.client.user, this.msg.client.user.id)
+					.setTitle("🔨 **AutoMod Ban**")
 					.setDescription("A member has been banned for from server for activating automoderation.")
 					.addField("Moderator", `${this.msg.client.user} (${this.msg.client.user.id})`)
 					.addField("Reason", reason)
@@ -413,7 +415,7 @@ export class ModerationEnforcement {
 		if (!last) {
 			mem.send(new RichEmbed()
 				.setAuthor(mem.user.tag, mem.user.displayAvatarURL)
-				.setTitle(`**Strike(s) ${strikeAmount > 0 ? "Issued" : "Removed"}**`)
+				.setTitle(`🚩 **Strike(s) ${strikeAmount > 0 ? "Issued" : "Removed"}**`)
 				.setColor(Colors.randomElement())
 				.setDescription(`${strikeAmount > 0 ? `You have received \`${strikeAmount}\` strike(s) in \`${this.msg.guild.name}\`.` : `A moderator has removed \`${Math.abs(strikeAmount)}\` strike(s) from your profile in \`${this.msg.guild.name}\`.`}`)
 				.addField("**Current Strikes**", `\`${oldStr}\` → \`${oldStr + strikeAmount}\``)
@@ -425,7 +427,7 @@ export class ModerationEnforcement {
 		// make new embed for logging purposes
 		const embedForSend = new RichEmbed()
 			.setAuthor(this.msg.author.tag, this.msg.author.displayAvatarURL)
-			.setTitle(`**${Math.abs(strikeAmount)} Strike(s) ${strikeAmount > 0 ? "Issued" : "Removed"}**`)
+			.setTitle(`🚩 **${Math.abs(strikeAmount)} Strike(s) ${strikeAmount > 0 ? "Issued" : "Removed"}**`)
 			.setColor(Colors.randomElement())
 			.setDescription(`Reason: ${reason}`)
 			.addField("User", `${mem} (${mem.id})`)
@@ -454,7 +456,7 @@ export class ModerationEnforcement {
 	private issueStrikeAlertMultiple(mem: GuildMember[], strikeAmount: number, reason: string): void {
 		const embedForSend = new RichEmbed()
 			.setAuthor(this.msg.author.tag, this.msg.author.displayAvatarURL)
-			.setTitle(`**Strike(s) ${strikeAmount > 0 ? "Issued" : "Removed"}**`)
+			.setTitle(`🚩 **Strike(s) ${strikeAmount > 0 ? "Issued" : "Removed"}**`)
 			.setColor(Colors.randomElement())
 			.setDescription(`Reason: ${reason}`)
 			.addField("Users", `${mem.join(" ")}`)

@@ -56,7 +56,7 @@ export default class Ban extends Command {
 
 			if (isBanned) {
 				const embed: RichEmbed = new RichEmbed()
-					.setTitle("**Ban Successful!**")
+					.setTitle("🔨 **Ban Successful!**")
 					.setAuthor(message.author.tag, message.author.avatarURL)
 					.setDescription("The user has been banned successfully.")
 					.addField("Banned ID", args[0])
@@ -96,7 +96,7 @@ export default class Ban extends Command {
 
 			const d: RichEmbed = new RichEmbed()
 				.setAuthor(message.author.tag, message.author.avatarURL)
-				.setTitle(`**Banned From: ${message.guild.name}**`)
+				.setTitle(`🔨 **Banned From: ${message.guild.name}**`)
 				.addField("Moderator", `${message.author} (${message.author.id})`)
 				.addField("Reason", reason)
 				.addField("Server", message.guild.name)				
@@ -111,7 +111,7 @@ export default class Ban extends Command {
 
 			const embed: RichEmbed = new RichEmbed()
 				.setAuthor(message.author.tag, message.author.avatarURL)
-				.setTitle("**Ban Successful!**")
+				.setTitle("🔨 **Ban Successful!**")
 				.setDescription("The user has been banned successfully.")
 				.addField("Banned User", `${member} (${member.id})`)
 				.addField("Moderator", `${message.author} (${message.author.id})`)

@@ -1,24 +1,24 @@
 import { Command } from "../../Models/Command";
 import { Client, Message, GuildMember, RichEmbed, TextChannel } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
-import { OtherUtilities } from "../../Utility/OtherUtilities";
 import { ModerationEnforcement } from "../../Handlers/ModerationEnforcement";
+import { OtherUtilities } from "../../Utility/OtherUtilities";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { Colors } from "../../Configuration/Configuration";
 
-export default class ExampleCommand extends Command {
+export default class Mute extends Command {
 	public constructor(client: Client) {
 		super(client, {
-			name: "kick",
+			name: "mute",
 			aliases: [],
-			description: "Kicks a user from the server, with an optional reason.",
-			usage: ["kick <@Mention> [Reason]"],
-			example: ["kick @User#0001", "kick @User#0001 Spamming channels"]
+			description: "Mutes a user for a specified amount of time.",
+			usage: ["mute <@Mention> [Time in Minutes: NUMBER] [Reason: STRING]"],
+			example: ["mute @User#0001", "mute @User#0001 20", "mute @User#0001 12 Stop spamming channels"]
 		}, {
-			commandName: "Kick",
-			botPermissions: ["KICK_MEMBERS"],
-			userPermissions: ["KICK_MEMBERS"],
-			argsLength: 1,
+			commandName: "Mute",
+			botPermissions: ["MANAGE_ROLES"],
+			userPermissions: ["MUTE_MEMBERS"],
+			argsLength: 0,
 			guildOnly: true,
 			botOwnerOnly: false
 		});
@@ -37,48 +37,47 @@ export default class ExampleCommand extends Command {
 			}
 		}
 
+		
 		if (!member) {
-			MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Kick Failed", `${message.author}, you need to tell me who to kick!`));
+			MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Mute Failed", `${message.author}, you need to tell me who to mute!`));
 			return;
 		}
 		if (member.id === message.author.id) {
-			MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Kick Failed", `${message.author}, why not just leave the server instead and come back later?`));
+			MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Mute Failed", `${message.author}, why not just take a break from sending messages?`));
 			return;
-		}
-		if (!member.kickable) {
-			MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Kick Failed", `${message.author}, I am unable to kick ${member}!`));
-			return;
-		}
-		let reason = args.slice(1).join(' ');
-		if (!reason) {
-			reason = "No reason provided";
 		}
 
 		if (message.author.id !== message.guild.ownerID && message.member.highestRole.comparePositionTo(member.highestRole) <= 0) {
-			MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Role Hierarchy Error", "The person you are attempting to kick has equal or higher role permissions than you."));
+			MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Role Hierarchy Error", "The person you are attempting to unmute has equal or higher role permissions than you."));
 			return;
 		}
 
+		let reason: string,
+			unmuteDuration: number;
+		if (!isNaN(parseInt(args[1]))) {
+			unmuteDuration = parseInt(args[1]);
+			reason = args.slice(2).join(' ');
+		} else {
+			unmuteDuration = null;
+			reason = args.slice(1).join(' ');
+		}
 
-		const d: RichEmbed = new RichEmbed()
-			.setAuthor(message.author.tag, message.author.avatarURL)
-			.setTitle(`👢 **Kicked From: ${message.guild.name}**`)
-			.addField("Moderator", `${message.author} (${message.author.id})`)
-			.addField("Reason", reason)
-			.addField("Server", message.guild.name)
-			.setTimestamp()
-			.setColor(Colors.randomElement())
-			.setFooter("Turkie");
-		await member.send(d).catch(e => { });
-		await member.kick(`[${message.author.tag}] ${reason}`);
+		if (!reason) {
+			reason = 'No reason provided.';
+		}
 
+		const me: ModerationEnforcement = new ModerationEnforcement(message, guildInfo, []);
+		me.muteUser(member, unmuteDuration ? unmuteDuration : null, reason);
+
+		// modlog
 		const embed: RichEmbed = new RichEmbed()
 			.setAuthor(message.author.tag, message.author.avatarURL)
-			.setTitle("👢 **Kick Successful!**")
-			.setDescription("The user has been kicked successfully.")
-			.addField("Kicked User", `${member} (${member.id})`)
+			.setTitle("🔇 **Mute Successful!**")
+			.setDescription("The user has been muted successfully.")
+			.addField("Muted User", `${member} (${member.id})`)
 			.addField("Moderator", `${message.author} (${message.author.id})`)
 			.addField("Reason", reason)
+			.addField("Duration", `${unmuteDuration ? `${unmuteDuration} Minutes`: "Indefinite"}`)
 			.addField("Server", message.guild.name)
 			.setFooter("Turkie Moderation")
 			.setColor(Colors.randomElement());
