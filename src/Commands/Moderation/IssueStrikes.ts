@@ -4,7 +4,7 @@ import { GuildInterface } from "../../Models/TurkieBotGuild";
 import { ModerationEnforcement } from "../../Handlers/ModerationEnforcement";
 import MessageFunctions from "../../Utility/MessageFunctions";
 
-export default class ExampleCommand extends Command {
+export default class IssueStrikes extends Command {
 	public constructor(client: Client) {
 		super(client, {
 			name: "issuestrikes",
