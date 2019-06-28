@@ -474,7 +474,7 @@ export class ModerationEnforcement {
 	 * @returns {boolean}
 	 */
 	public static configuredModLogs(msg: Message, res: GuildInterface): boolean {
-		return res.serverConfiguration.serverLogs.modLogs.isEnabled && (msg.guild.channels.get(res.serverConfiguration.serverLogs.modLogs.channel) !== null);
+		return res.serverConfiguration.serverLogs.modLogs.isEnabled && msg.guild.channels.has(res.serverConfiguration.serverLogs.modLogs.channel);
 	}
 
 	/**

@@ -52,6 +52,11 @@ export default class Unmute extends Command {
 			return;
 		}
 
+		// make sure the role is in guild and the member has it
+		if (!(guildInfo.moderation.moderationConfiguration.mutedRole && message.guild.roles.has(guildInfo.moderation.moderationConfiguration.mutedRole) && member.roles.has(guildInfo.moderation.moderationConfiguration.mutedRole))) {
+			MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Not Muted", `${member} is not muted.`));
+			return;
+		}
 		
 		let reason: string,
 			unmuteDuration: number;
