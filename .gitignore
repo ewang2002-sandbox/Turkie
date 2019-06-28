@@ -1,0 +1,14 @@
+# Node Modules
+/node_modules/
+
+# Compiled Files
+/lib/
+
+# Configuration
+/src/Configuration/Configuration.ts
+
+# PFP
+/images/PFP.png
+
+# Logs
+/logs/

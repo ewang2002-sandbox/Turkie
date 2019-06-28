@@ -1,0 +1,19 @@
+{
+	"compilerOptions": {
+		"target": "esnext",
+		"module": "commonjs",
+		"sourceMap": false,
+		"outDir": "./lib",
+		"rootDir": "./src",
+		"strict": true,
+		"strictNullChecks": false,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"noImplicitReturns": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true
+	},
+	"exclude": [
+		"test/"
+	]
+}

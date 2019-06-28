@@ -1,0 +1,23 @@
+{
+	"name": "turkie",
+	"version": "1.0.0",
+	"description": "Turkie: A redesigned moderation bot written in TypeScript.",
+	"main": "Index.js",
+	"dependencies": {
+		"discord.js": "^11.5.1",
+		"mongoose": "^5.5.15",
+		"request": "^2.88.0"
+	},
+	"devDependencies": {
+		"@types/mongoose": "^5.5.6",
+		"@types/node": "^12.0.8",
+		"@types/request": "^2.48.1",
+		"typescript": "^3.5.1"
+	},
+	"scripts": {
+		"compile": "tsc -p .",
+		"start": "npm run compile && node lib/Index.js"
+	},
+	"author": "Edward Wang",
+	"license": "MIT"
+}

@@ -1,0 +1,10 @@
+- Prettify ViewConfiguration.ts (make it easier to read).
+- strikes => reason should be recorded in database. 
+- welcome message
+- autorole 
+- be sure to add error handling.
+
+- Kick
+- Mute
+- Unmute
+- Purge/Clear
