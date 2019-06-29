@@ -57,6 +57,7 @@ export class CommandManager {
 		if (!command) {
 			const errNoCommandEmbed = new RichEmbed()
 				.setTitle("Command Not Found")
+				.setAuthor(this.client.user.tag, this.client.user.displayAvatarURL)
 				.setDescription(`The command, \`${this.command}\`, was not found. Try again.`)
 				.setColor(Colors.randomElement())
 				.setFooter("⚠ Command Not Found")
@@ -76,6 +77,9 @@ export class CommandManager {
 			.setColor(Colors.randomElement())
 			.setDescription(command.description)
 			.setFooter("<> Indicate Required. [] Indicate Optional. Do NOT Include <> & [].")
+			.addField("Command Name", "```css\n" + command.name + "```", true)
+			.addField(`Aliases`, "```css\n" + aliases + "```", true)
+			.addBlankField()
 			.addField("Bot Owner Only?", "```css\n" + bowner + "```", true)
 			.addField("Guild Only?", "```css\n" + gonly + "```", true)
 			.addBlankField()
@@ -83,7 +87,6 @@ export class CommandManager {
 			.addField(`User Permissions`, "```css\n" + userperms + "```", true)
 			.addField(`Bot Permissions`, "```css\n" + botperms + "```", true)
 			.addBlankField()
-			.addField(`Aliases`, "```css\n" + aliases + "```", true)
 			.addField(`Command Usage`, "```css\n" + cmdusage + "```", true)
 			.addField(`Examples`, "```css\n" + examples + "```", true)
 			.setTimestamp();
