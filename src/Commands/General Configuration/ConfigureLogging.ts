@@ -9,7 +9,7 @@ export default class ConfigLogging extends Command {
 		super(client, {
 			name: "configlogging",
 			aliases: ["logging"],
-			description: "Your description.",
+			description: "Configures logging for the server.",
 			usage: ["configlogging <Log Type: joinleave | moderation>", "configlogging <Log Type: joinleave | moderation> <Channel: #MENTION>"],
 			example: []
 		}, {

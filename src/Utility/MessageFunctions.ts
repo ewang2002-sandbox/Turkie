@@ -1,7 +1,7 @@
 import { RichEmbed, Message } from "discord.js";
 import { Colors } from "../Configuration/Configuration";
 
-type Tag = "INVALID_NUMBER_INPUT" | "INVALID_CHOICE_INPUT" | "INVALID_INVITE_INPUT" | "NO_MENTIONS_FOUND" | "NO_CHANNELS_FOUND" | "NO_CHAN_PERMISSIONS" | "NO_NEGATIVE_NUMBER" | "NO_ZERO_NUMBER" | "INVALID_ID" | "NO_USERS_FOUND" | "NOT_IN_VC";
+type Tag = "INVALID_NUMBER_INPUT" | "INVALID_CHOICE_INPUT" | "INVALID_INVITE_INPUT" | "NO_MENTIONS_FOUND" | "NO_CHANNELS_FOUND" | "NO_CHAN_PERMISSIONS" | "NO_NEGATIVE_NUMBER" | "NO_ZERO_NUMBER" | "INVALID_ID" | "NO_USERS_FOUND" | "NOT_IN_VC" | "MSG_TOO_LONG" | "NOT_ENABLED" | "NO_ROLE_FOUND";
 
 export default class MessageFunctions {
 	/**
@@ -103,6 +103,21 @@ export default class MessageFunctions {
 			case ("NOT_IN_VC"): {
 				embed.setTitle("Not In Voice Channel")
 				embed.setDescription("You must be in a voice channel. Please join one and try again!");
+				break;
+			}
+			case ("MSG_TOO_LONG"): {
+				embed.setTitle("Too Long!");
+				embed.setDescription(`Your ${misc[0]} is too long to process. The maximum amount of characters allowed is ${misc[1]} characters.`);
+				break;
+			}
+			case ("NOT_ENABLED"): {
+				embed.setTitle("Not Enabled!");
+				embed.setDescription(`The service, \`${misc[0]}\`, is not enabled at this time. Please try again later, or enable it if you have the permissions.`);
+				break;
+			}
+			case ("NO_ROLE_FOUND"): {
+				embed.setTitle("Invalid Role Inputted");
+				embed.setDescription("Please input a valid role ID or mention.");
 				break;
 			}
 		}

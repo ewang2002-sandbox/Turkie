@@ -53,19 +53,13 @@ export interface GuildInterface extends Document {
 			}>;
 		}
 	};
-	warningLogs: Array<{
-		warnedID: string;
-		guildID: string;
-		moderatorID: string;
-		reason: string;
-		warningID: number
-	}>;
 	// Custom Commands
 	customCommands: {
 		isEnabled: boolean;
 		customCommands: Array<{
 			name: string;
 			creator: string;
+			commandanswer: string;
 			embed: boolean;
 			commandCreatedAt: number;
 			dm: boolean;
@@ -143,8 +137,6 @@ export const GuildSchema = new Schema({
 			specificInvites: []
 		}
 	},
-	// warnings
-	warningLogs: [],
 	// Custom Commands
 	customCommands: {
 		isEnabled: Boolean,

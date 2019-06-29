@@ -4,9 +4,10 @@ import { Command } from "../Models/Command";
 import { CommandManager } from "../Utility/CommandManager";
 import MessageFunctions from "../Utility/MessageFunctions";
 import { GuildInterface } from '../Models/TurkieBotGuild';
+import { Colors } from '../Configuration/Configuration.Sample';
 
 export class CommandHandler {
-	/**The message. */
+	/**The "" + this.msg. */
 	private msg: Message;
 	private guildInfo: GuildInterface;
 
@@ -134,6 +135,49 @@ export class CommandHandler {
 
 			// execution
 			execCommand.execute(this.msg.client, this.msg, args, this.guildInfo);
+		} else {
+			// make sure it's a guild and cc is enabled
+			if (this.msg.guild && this.guildInfo.customCommands.isEnabled) {
+				let ccData;
+				for (let i = 0; i < this.guildInfo.customCommands.customCommands.length; i++) {
+					if (this.guildInfo.customCommands.customCommands[i].name === commandfile) {
+						ccData = this.guildInfo.customCommands.customCommands[i];
+						break;
+					}
+				}
+	
+				if (ccData) {
+					if (this.guildInfo.serverConfiguration.commands.deleteCommandTrigger) {
+						await this.msg.delete().catch(error => {});
+					}
+					let textToSend: string = ccData.commandanswer
+						.replace(/{author}/g, "" + this.msg.author)
+						.replace(/{authorNickname}/g,"" + this.msg.member.displayName)
+						.replace(/{authorDiscrim}/g, "" + this.msg.author.discriminator)
+						.replace(/{channel}/g, "" + this.msg.channel)
+						.replace(/{serverName}/g, "" + this.msg.guild.name)
+						.replace(/{authorID}/g, "" + this.msg.author.id)
+						.replace(/{channelID}/g, "" + this.msg.channel.id)
+						.replace(/{serverID}/g, "" + this.msg.guild.id);
+	
+	
+					let toSend: string | RichEmbed;
+					if (ccData.embed) {
+						toSend = new RichEmbed()
+							.setAuthor(this.msg.author.tag, this.msg.author.avatarURL)
+							.setColor(Colors.randomElement())
+							.setDescription(textToSend);
+					} else {
+						toSend = textToSend;
+					}
+	
+					if (ccData.dm) {
+						this.msg.author.send(toSend).catch(e => {});
+					} else {
+						this.msg.channel.send(toSend).catch(e => {});
+					}
+				}
+			}
 		}
 	}
 }

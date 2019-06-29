@@ -2,6 +2,7 @@ import { Command } from "../../Models/Command";
 import { Client, Message, RichEmbed } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../../Models/TurkieBotGuild";
 import MessageFunctions from "../../Utility/MessageFunctions";
+import { Colors } from "../../Configuration/Configuration.Sample";
 
 export default class ViewConfiguration extends Command {
 	public constructor(client: Client) {
@@ -47,7 +48,7 @@ export default class ViewConfiguration extends Command {
 		// TODO fix
 		return new Promise((resolve, reject) => {
 			const settings = new RichEmbed()
-				.setColor("RANDOM")
+				.setColor(Colors.randomElement())
 				.setAuthor(message.author.tag, message.author.avatarURL)
 				.setTimestamp()
 				.setFooter("Turkie Settings")

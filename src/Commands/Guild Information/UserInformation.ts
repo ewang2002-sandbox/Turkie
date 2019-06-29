@@ -5,6 +5,7 @@ import { OtherUtilities } from "../../Utility/OtherUtilities";
 import { ModerationEnforcement } from "../../Handlers/ModerationEnforcement";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { EnhancedDates } from "../../Utility/EnhancedDates";
+import { Colors } from "../../Configuration/Configuration.Sample";
 
 export default class UserInformation extends Command {
 	public constructor(client: Client) {
@@ -87,7 +88,7 @@ export default class UserInformation extends Command {
             .setTitle(`User Information: ${member.user.tag}`)
             .setDescription("Some basic user information.")
             .setThumbnail(member.user.displayAvatarURL)
-            .setColor("RANDOM")
+            .setColor(Colors.randomElement())
             .addField("Name", member.user.tag, true)
             .addField("User ID", member.user.id, true)
             .addField("Nickname", nick, true)

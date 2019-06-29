@@ -55,7 +55,7 @@ export default class ExecuteTerminal extends Command {
 				msgToSend = new RichEmbed()
 					.setAuthor(message.author.tag, message.author.avatarURL)
 					.setTitle('Results')
-					.setColor("RANDOM")
+					.setColor(Colors.randomElement())
 					.addField('📥 Input', `\`\`\`bash\n${args}\n\`\`\``);
 			} else {
 				msgToSend = "";
@@ -91,7 +91,7 @@ export default class ExecuteTerminal extends Command {
 					msgToSend = new RichEmbed()
 						.setAuthor(message.author.tag, message.author.avatarURL)
 						.setTitle('Results')
-						.setColor("RANDOM")
+						.setColor(Colors.randomElement())
 						.addField('📥 Input', `\`\`\`bash\n${args}\n\`\`\``);
 				} else {
 					msgToSend = "";

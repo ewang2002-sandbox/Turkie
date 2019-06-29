@@ -97,7 +97,6 @@ export namespace MongoDB {
 									specificInvites: []
 								}
 							},
-							warningLogs: [],
 							// Custom Commands
 							customCommands: {
 								isEnabled: false,

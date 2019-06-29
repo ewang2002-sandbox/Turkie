@@ -1,4 +1,4 @@
-import { Client, GuildMember, RichEmbed, TextChannel, Collection, Invite, Guild } from "discord.js";
+import { Client, GuildMember, RichEmbed, TextChannel, Collection, Invite, Guild, Role } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../Models/TurkieBotGuild";
 import { EnhancedDates } from "../Utility/EnhancedDates";
 import { Colors } from "../Configuration/Configuration";
@@ -85,11 +85,14 @@ module.exports.run = async (client: Client, member: GuildMember): Promise<void> 
 		// auto role
 		if (data.serverConfiguration.autoRole.isEnabled
 			&& data.serverConfiguration.autoRole.roles.length !== 0) {
+			let roles: Role[] = [];
 			for (let i = 0; i < data.serverConfiguration.autoRole.roles.length; i++) {
-				if (member.guild.roles.get(data.serverConfiguration.autoRole.roles[i])) {
-					member.addRole(data.serverConfiguration.autoRole.roles[i]).catch(e => { });
+				if (member.guild.roles.has(data.serverConfiguration.autoRole.roles[i])) {
+					roles.push(member.guild.roles.get(data.serverConfiguration.autoRole.roles[i]));
 				}
 			}
+			// add bulk roles.
+			member.addRoles(roles).catch(e => { });
 		}
 
 		// log
