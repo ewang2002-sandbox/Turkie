@@ -4,7 +4,7 @@ import { GuildInterface } from "../../Models/TurkieBotGuild";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { EnhancedDates } from "../../Utility/EnhancedDates";
 
-export default class ExampleCommand extends Command {
+export default class RoleInformation extends Command {
 	public constructor(client: Client) {
 		super(client, {
 			name: "roleinfo",

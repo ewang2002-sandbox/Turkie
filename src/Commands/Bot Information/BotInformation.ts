@@ -3,7 +3,7 @@ import { Client, Message, RichEmbed } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import { Colors } from "../../Configuration/Configuration";
 
-export default class ExampleCommand extends Command {
+export default class BotInformation extends Command {
 	public constructor(client: Client) {
 		super(client, {
 			name: "botinfo",

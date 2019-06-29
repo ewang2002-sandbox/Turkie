@@ -6,7 +6,7 @@ import { ModerationEnforcement } from "../../Handlers/ModerationEnforcement";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { Colors } from "../../Configuration/Configuration";
 
-export default class ExampleCommand extends Command {
+export default class Kick extends Command {
 	public constructor(client: Client) {
 		super(client, {
 			name: "kick",
