@@ -26,19 +26,14 @@ module.exports.run = async (client: Client, message: Message): Promise<void> => 
 			}
 
 			// get the exempt roles
-			let exemptRole: boolean;
-			if (message.guild.roles.get(res.moderation.moderationConfiguration.exemptRole)) {
-				exemptRole = member.roles.has(res.moderation.moderationConfiguration.exemptRole);
-			} else {
-				exemptRole = false;
-			}
+			let exemptRole: boolean = member.roles.some(x => res.moderation.moderationConfiguration.exemptRole.includes(x.id));
 
 			let isOwner: boolean = member.id === message.guild.owner.user.id;
 			let isAdmin: boolean = member.hasPermission("ADMINISTRATOR");
 			let exemptFromFilter: boolean = (exemptRole || isOwner || isAdmin);
 
 			// if not exempt
-			if (!exemptFromFilter && !res.moderation.moderationConfiguration.disabledCommands.includes(message.channel.id)) {
+			if (!exemptFromFilter && !res.moderation.moderationConfiguration.exemptChannel.includes(message.channel.id)) {
 				const modEnf: ModerationEnforcement = new ModerationEnforcement(message, res, [message.member]);
 
 				// word filter

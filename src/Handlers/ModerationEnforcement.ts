@@ -41,6 +41,9 @@ export class ModerationEnforcement {
 		if (this.msg.deletable) {
 			this.msg.delete();
 		}
+		// lock channel down
+		this.tempLockChannel(this.msg.channel as TextChannel);
+		
 		let resultant = await this.strikeManagement(true, "Sent bad words in a channel.");
 		return resultant;
 	}
@@ -182,7 +185,7 @@ export class ModerationEnforcement {
 			}
 
 			await gMember.send(new RichEmbed()
-				.setAuthor(this.msg.client.user, this.msg.client.user.id)
+				.setAuthor(this.msg.client.user, this.msg.client.user.displayAvatarURL)
 				.setTitle("👢 **Kicked**")
 				.setDescription(`You have been kicked from **${this.msg.guild.name}**.`)
 				.addField("**Moderator**", `${this.msg.client.user} (${this.msg.client.user.id})`)
@@ -194,7 +197,7 @@ export class ModerationEnforcement {
 			// mod log it
 			if (ModerationEnforcement.configuredModLogs(this.msg, this.res)) {
 				const embed: RichEmbed = new RichEmbed()
-					.setAuthor(this.msg.client.user, this.msg.client.user.id)
+					.setAuthor(this.msg.client.user, this.msg.client.user.displayAvatarURL)
 					.setTitle("👢 **AutoMod Kick**")
 					.setDescription("A member has been kicked from the server for activating automoderation.")
 					.addField("Moderator", `${this.msg.client.user} (${this.msg.client.user.id})`)
@@ -224,7 +227,7 @@ export class ModerationEnforcement {
 			}
 
 			await gMember.send(new RichEmbed()
-				.setAuthor(this.msg.client.user, this.msg.client.user.id)
+				.setAuthor(this.msg.client.user, this.msg.client.user.displayAvatarURL)
 				.setTitle("🔨 **Banned**")
 				.setDescription(`You have been banned from **${this.msg.guild.name}**.`)
 				.addField("**Moderator**", `${this.msg.client.user} (${this.msg.client.user.id})`)
@@ -236,7 +239,7 @@ export class ModerationEnforcement {
 			// mod log it
 			if (ModerationEnforcement.configuredModLogs(this.msg, this.res)) {
 				const embed: RichEmbed = new RichEmbed()
-					.setAuthor(this.msg.client.user, this.msg.client.user.id)
+					.setAuthor(this.msg.client.user, this.msg.client.user.displayAvatarURL)
 					.setTitle("🔨 **AutoMod Ban**")
 					.setDescription("A member has been banned for from server for activating automoderation.")
 					.addField("Moderator", `${this.msg.client.user} (${this.msg.client.user.id})`)

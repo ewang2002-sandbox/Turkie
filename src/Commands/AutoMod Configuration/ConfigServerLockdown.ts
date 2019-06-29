@@ -16,7 +16,7 @@ export default class ConfigServerLockdown extends Command {
 		}, {
 			commandName: "Configure Server Lockdown",
 			botPermissions: ["KICK_MEMBERS"],
-			userPermissions: ["MANAGE_CHANNELS"],
+			userPermissions: ["MANAGE_CHANNELS", "KICK_MEMBERS"],
 			argsLength: 0,
 			guildOnly: true,
 			botOwnerOnly: false

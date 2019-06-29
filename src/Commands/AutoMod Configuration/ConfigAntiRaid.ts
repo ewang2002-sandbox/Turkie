@@ -37,7 +37,7 @@ export default class ConfigAntiRaid extends Command {
 			});
 		} else {
 			const num: number = Number.parseInt(args[args.length - 1]);
-			if (!Number.isNaN(num)) {
+			if (Number.isNaN(num)) {
 				MessageFunctions.sendRichEmbed(message, MessageFunctions.msgConditions(message, "INVALID_NUMBER_INPUT"));
 				return;			
 			}
@@ -68,7 +68,7 @@ export default class ConfigAntiRaid extends Command {
 						MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 						return;
 					} else {
-						const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "AntiRaid Module Updated", `The AntiRaid system module will be triggered when ${guildInfo.moderation.antiRaid.amount} members join within ${num} milliseconds.`);
+						const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "AntiRaid Module Updated", `The AntiRaid system module will be triggered when ${guildInfo.moderation.antiRaid.amount} members join within ${num} seconds.`);
 						MessageFunctions.sendRichEmbed(message, embed);
 						return;
 					}

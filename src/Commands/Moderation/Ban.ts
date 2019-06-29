@@ -12,7 +12,7 @@ export default class Ban extends Command {
 			name: "ban",
 			aliases: [],
 			description: "Bans a user from the server, or an ID associated with a user.",
-			usage: [],
+			usage: ["ban <@Mention> [Reason: STRING]"],
 			example: ["ban @User#0001", "ban @User#0001 Spamming channels"]
 		}, {
 			commandName: "Ban",

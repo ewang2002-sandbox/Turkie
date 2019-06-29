@@ -9,7 +9,7 @@ export interface GuildInterface extends Document {
 		moderationConfiguration: {
 			// roles
 			mutedRole: string;
-			exemptRole: string;
+			exemptRole: Array<string>;
 			// disabled commands
 			disabledCommands: Array<string>;
 			// exempt channel
@@ -102,7 +102,7 @@ export const GuildSchema = new Schema({
 	moderation: {
 		moderationConfiguration: {
 			mutedRole: String,
-			exemptRole: String,
+			exemptRole: [],
 			disabledCommands: [],
 			exemptChannel: [],
 			maxStrikes: Number,

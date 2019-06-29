@@ -62,7 +62,7 @@ export namespace MongoDB {
 							moderation: {
 								moderationConfiguration: {
 									mutedRole: "",
-									exemptRole: "",
+									exemptRole: [],
 									disabledCommands: [],
 									exemptChannel: [],
 									maxStrikes: 5,
@@ -83,7 +83,7 @@ export namespace MongoDB {
 								antiSpam: {
 									isEnabled: false,
 									amount: 12,
-									time: 4,
+									time: 4000,
 								},
 								antiRaid: {
 									isEnabled: false,

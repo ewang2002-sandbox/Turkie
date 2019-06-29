@@ -8,10 +8,10 @@ export default class ViewConfiguration extends Command {
 	public constructor(client: Client) {
 		super(client, {
 			name: "viewconfiguration",
-			aliases: ["currentconfig"],
+			aliases: ["currentconfig", "viewconf"],
 			description: "Allows you to check your current server configuration. You will want to execute the command beforehand to see all possible options.",
-			usage: [],
-			example: []
+			usage: ["currentconfig <moderation | serverConfiguration> [--pretty]"],
+			example: ["currentconfig moderation", "currentconfig serverConfiguration --pretty"]
 		}, {
 			commandName: "View Server Configuration",
 			botPermissions: [],
@@ -35,6 +35,18 @@ export default class ViewConfiguration extends Command {
 			query = args[0];
 		}
 
+		if (args.includes("--pretty")) {
+			const embed: RichEmbed = new RichEmbed()
+				.setAuthor(message.guild.name, message.guild.iconURL);
+			// begin getting info
+			if (args[0] === "moderation") {
+
+			} else {
+
+			}
+			message.channel.send();
+			return;
+		}
 		await this.serverSettings(message, query).then(async (embed: RichEmbed) => {
 			await message.channel.send(embed);
 		});
