@@ -9,9 +9,9 @@ export default class ViewConfiguration extends Command {
 		super(client, {
 			name: "viewconfiguration",
 			aliases: ["currentconfig", "viewconf"],
-			description: "Allows you to check your current server configuration. You will want to execute the command beforehand to see all possible options.",
-			usage: ["currentconfig <moderation | serverConfiguration> [--pretty]"],
-			example: ["currentconfig moderation", "currentconfig serverConfiguration --pretty"]
+			description: "Allows you to check your current server configuration. You will want to execute the command beforehand to see all possible options. Including the `--extra` flag will give information that the regular configuration command cannot give.",
+			usage: ["currentconfig <moderation | serverConfiguration> [--extra]"],
+			example: ["currentconfig moderation", "currentconfig serverConfiguration --extra"]
 		}, {
 			commandName: "View Server Configuration",
 			botPermissions: [],
@@ -35,16 +35,45 @@ export default class ViewConfiguration extends Command {
 			query = args[0];
 		}
 
-		if (args.includes("--pretty")) {
+		if (args.includes("--extra")) {
 			const embed: RichEmbed = new RichEmbed()
-				.setAuthor(message.guild.name, message.guild.iconURL);
+				.setAuthor(message.guild.name, message.guild.iconURL)
+				.setColor(Colors.randomElement());
 			// begin getting info
 			if (args[0] === "moderation") {
-
+				let exemptRolesToDisplay: string = "";
+				for (let id of guildInfo.moderation.moderationConfiguration.exemptRole) {
+					if (message.guild.roles.has(id)) {
+						exemptRolesToDisplay += `${message.guild.roles.get(id)} `;
+					}
+				}
+				let exemptChans: string = "";
+				for (let id of guildInfo.moderation.moderationConfiguration.exemptChannel) {
+					if (message.guild.channels.has(id)) {
+						exemptChans += `${message.guild.channels.get(id)} `;
+					}
+				}
+				embed.setDescription("Below are some of the server's configured moderation information. To see some of the other information, exclude the `--extra` flag.");
+				embed.addField("Muted Role", guildInfo.moderation.moderationConfiguration.mutedRole && message.guild.roles.has(guildInfo.moderation.moderationConfiguration.mutedRole) ? message.guild.roles.get(guildInfo.moderation.moderationConfiguration.mutedRole) : "None");
+				embed.addField("Exempt Role(s)", exemptRolesToDisplay.length !== 0 ? exemptRolesToDisplay : "None");
+				embed.addField("Exempt Channel(s)", exemptChans.length !== 0 ? exemptChans : "None");
+				embed.addField("Strike Settings", `Max Strikes: ${guildInfo.moderation.moderationConfiguration.maxStrikes}\nPunishment: ${guildInfo.moderation.moderationConfiguration.punishment.toUpperCase()}`);
+				message.channel.send(embed).catch(e => { });
+				return;
 			} else {
+				embed.setDescription("Below are some of the server's configuration information. To see some of the other information, exclude the `--extra` flag.");
+				embed.addField("Moderation Logging", `Enabled: ${guildInfo.serverConfiguration.serverLogs.modLogs.isEnabled ? "Yes" : "No"}\nChannel: ${guildInfo.serverConfiguration.serverLogs.modLogs.channel && message.guild.channels.has(guildInfo.serverConfiguration.serverLogs.modLogs.channel) ? message.guild.channels.get(guildInfo.serverConfiguration.serverLogs.modLogs.channel) : "None"}`);
+				embed.addField("Join & Leave Logging", `Enabled: ${guildInfo.serverConfiguration.serverLogs.joinLeaveLogs.isEnabled ? "Yes" : "No"}\nChannel: ${guildInfo.serverConfiguration.serverLogs.joinLeaveLogs.channel && message.guild.channels.has(guildInfo.serverConfiguration.serverLogs.joinLeaveLogs.channel) ? message.guild.channels.get(guildInfo.serverConfiguration.serverLogs.joinLeaveLogs.channel) : "None"}`);
 
+				let exemptRolesToDisplay: string = "";
+				for (let id of guildInfo.serverConfiguration.autoRole.roles) {
+					if (message.guild.roles.has(id)) {
+						exemptRolesToDisplay += `${message.guild.roles.get(id)} `;
+					}
+				}
+				embed.addField("Welcome Roles", exemptRolesToDisplay.length !== 0 ? exemptRolesToDisplay : "None");
 			}
-			message.channel.send();
+			message.channel.send(embed).catch(e => { });
 			return;
 		}
 		await this.serverSettings(message, query).then(async (embed: RichEmbed) => {

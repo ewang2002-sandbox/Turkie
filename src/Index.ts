@@ -13,3 +13,8 @@ process.on("uncaughtException", (error) => {
 	const l: Log = new Log(error);
 	l.logErrorMessage();
 });
+
+process.on("unhandledRejection", (error) => {
+	const l: Log = new Log(error as Error);
+	l.logErrorMessage();
+});
