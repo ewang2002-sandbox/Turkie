@@ -1,8 +1,10 @@
 import { Command } from "../../Models/Command";
 import { Client, Message } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
+import { Colors } from "../../Configuration/Configuration";
+import MessageFunctions from "../../Utility/MessageFunctions";
 
-export default class PingCommand extends Command {
+export default class BotPing extends Command {
 	private readonly pingTimes: number[] = [];
 	private readonly apiTimes: number[] = [];
 
@@ -26,7 +28,7 @@ export default class PingCommand extends Command {
 	public async execute(client: Client, message: Message, args: string[], guildInfo: GuildInterface): Promise<void> {
 		let responseMessage: any = await message.channel.send({
 			embed: {
-				color: 0xe5cc0b,
+				color: Colors.randomElement(),
 				description: '🏓 Pinging!'
 			}
 		});
@@ -40,25 +42,25 @@ export default class PingCommand extends Command {
 					name: message.author.tag,
 					icon_url: message.author.displayAvatarURL
 				},
-				color: 0xe5cc0b,
+				color: Colors.randomElement(),
 				title: `${client.user.tag} Ping Statistics`,
 				description: `🏓 Pong!`,
 				fields: [{
 					name: 'Latency',
-					value: "```css\n" + `${(responseMessage.createdTimestamp - message.createdTimestamp).toFixed(2)}` + "ms```",
+					value: MessageFunctions.codeBlockIt(`${(responseMessage.createdTimestamp - message.createdTimestamp).toFixed(2)} MS`),
 				},
 				{
 					name: 'WebSocket/API Ping',
-					value: "```css\n" + `${(client.ping).toFixed(2)}` + "ms```",
+					value: MessageFunctions.codeBlockIt(`${(client.ping).toFixed(2)} MS`),
 					inline: true
 				},
 				{
 					name: 'Average Latency',
-					value: "```css\n" + `${this.pingTimes.length === 0 ? Math.round(responseMessage.createdTimestamp - message.createdTimestamp).toFixed(2) : (this.pingTimes.reduce((p, c) => { return p + c }) / this.pingTimes.length).toFixed(2)}` + "ms```",
+					value: MessageFunctions.codeBlockIt(`${this.pingTimes.length === 0 ? Math.round(responseMessage.createdTimestamp - message.createdTimestamp).toFixed(2) : (this.pingTimes.reduce((p, c) => { return p + c }) / this.pingTimes.length).toFixed(2)} MS`),
 				},
 				{
 					name: 'Average Websocket/API Ping',
-					value: "```css\n" + `${this.apiTimes.length === 0 ? Math.round(client.ping).toFixed(2) : (this.apiTimes.reduce((p, c) => { return p + c }) / this.apiTimes.length).toFixed(2)}` + "ms```",
+					value: MessageFunctions.codeBlockIt(`${this.apiTimes.length === 0 ? Math.round(client.ping).toFixed(2) : (this.apiTimes.reduce((p, c) => { return p + c }) / this.apiTimes.length).toFixed(2)} MS`),
 					inline: true
 				}
 				],

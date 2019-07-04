@@ -11,9 +11,10 @@
 		"noUnusedParameters": false,
 		"noImplicitReturns": true,
 		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true
+		"allowSyntheticDefaultImports": true,
+		"resolveJsonModule": true
 	},
 	"exclude": [
 		"test/"
-	]
+	],
 }

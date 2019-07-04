@@ -1,8 +1,11 @@
 ![Turkie Logo, Thanks to Cassie!](https://github.com/ewang20027/Turkie/blob/master/images/Turkie.png)
 
-A complete rewrite of my JavaScript-based Discord bot, TurkieBot; Turkie, which is completely rewritten in TypeScript, is focused mainly on moderation. This bot will be my submission to the Discord Hack Week contest.
+A complete rewrite of my JavaScript-based Discord bot, TurkieBot; Turkie, which is completely rewritten in TypeScript, is focused mainly on moderation. This bot was my submission to the Discord Hack Week contest.
+
+The invite link for the public bot is [here](https://discordapp.com/api/oauth2/authorize?client_id=594006522816626690&permissions=8&scope=bot).
 
 Want to know more about Turkie? Head over [here](https://github.com/ewang20027/Turkie/blob/master/mdpages/HISTORY.md).
+
 Need support? Want to hang out? Turkie has a Discord server. Click [here](https://discord.gg/6eBTTDM) to join us.
 
 # Purpose of Turkie

@@ -2,6 +2,7 @@ import { Client, GuildMember, RichEmbed, TextChannel } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../Models/TurkieBotGuild";
 import { EnhancedDates } from "../Utility/EnhancedDates";
 import { Colors } from "../Configuration/Configuration";
+import MessageFunctions from "../Utility/MessageFunctions";
 
 module.exports.run = async (client: Client, member: GuildMember): Promise<void> => {
 	TurkieBotGuild.findOne({ guildID: member.guild.id }, async (err: any, data: GuildInterface) => {
@@ -15,7 +16,7 @@ module.exports.run = async (client: Client, member: GuildMember): Promise<void> 
 				.setAuthor(member.user.tag, member.user.displayAvatarURL)
 				.setTitle("📤 Member Left")
 				.setDescription(`${member} has left ${member.guild.name}`)
-				.addField("User ID", "```css\n" + member.id + "```", true)
+				.addField("User ID", MessageFunctions.codeBlockIt(member.id), true)
 				.setThumbnail(member.user.displayAvatarURL)
 				.setTimestamp()
 				.setColor(Colors.randomElement())

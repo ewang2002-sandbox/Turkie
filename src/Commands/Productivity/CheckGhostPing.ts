@@ -6,6 +6,8 @@ import { EnhancedDates } from "../../Utility/EnhancedDates";
 import MessageFunctions from "../../Utility/MessageFunctions";
 
 export default class CheckGhostPings extends Command {
+	private readonly maxAmount: number = 5;
+
 	public constructor(client: Client) {
 		super(client, {
 			name: "checkghostpings",
@@ -25,17 +27,16 @@ export default class CheckGhostPings extends Command {
 
 	public async execute(client: Client, message: Message, args: string[], guildInfo: GuildInterface): Promise<void> {
 		let ghostPinged: string = "";
-		let maxAmount = 5;
 		let amount = 0;
 		for (let i = 0; i < ghostPings.length; i++) {
-			console.log(ghostPings[i])
-			if (ghostPings[i].content.includes(`<@!${message.author.id}>`) && ghostPings[i].channel === message.channel.id) {
+			if (ghostPings[i].content.includes(message.author.id) && ghostPings[i].channel === message.channel.id) {
+				console.log("X");
 				const date: EnhancedDates = new EnhancedDates();
 				ghostPinged += `User: <@${ghostPings[i].id}>\nTime: ${date.formatUTCDate(ghostPings[i].sent)}\n\n`;
 				amount++;
 			}
 
-			if (amount >= maxAmount) {
+			if (amount >= this.maxAmount) {
 				break;
 			}
 		}

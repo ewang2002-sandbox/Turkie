@@ -101,7 +101,7 @@ export class CommandHandler {
 					}
 
 					if (!hasPermissions) {
-						let noPermissions: RichEmbed = MessageFunctions.createMsgEmbed(this.msg, "No Permissions", "You do not have permissions to run this command.");
+						let noPermissions: RichEmbed = MessageFunctions.createMsgEmbed(this.msg, "No Permissions", `You do not have permissions to run this command. You require the following permissions in this channel:\n\`\`\`css\n${execCommand.userPermissions.join(", ")}\`\`\``);
 						MessageFunctions.sendRichEmbed(this.msg, noPermissions);
 						return;
 					}
@@ -119,7 +119,7 @@ export class CommandHandler {
 					}
 
 					if (!hasNeededPerms) {
-						let noPermissions: RichEmbed = MessageFunctions.createMsgEmbed(this.msg, "No Permissions", "The bot does not have permissions ");
+						let noPermissions: RichEmbed = MessageFunctions.createMsgEmbed(this.msg, "No Permissions", `The bot does not have permissions to run this command. The bot requires the following permissions:\n\`\`\`css\n${execCommand.botPermissions.join(", ")}\`\`\``);
 						MessageFunctions.sendRichEmbed(this.msg, noPermissions);
 						return;
 					}

@@ -92,19 +92,19 @@ export default class EditCustomCommand extends Command {
 			MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Custom Command Edited", "You have edited a custom command.", [
 				{
 					name: "Command Name",
-					value: "```css\n" + commandName + "```"
+					value: MessageFunctions.codeBlockIt(commandName)
 				},
 				{
 					name: "Response",
-					value: `${editResp.length < 1000 ? editResp : editResp.slice(0, 1000) + "..."}`
+					value: MessageFunctions.codeBlockIt(`${editResp.length < 1000 ? editResp : editResp.slice(0, 1000) + "..."}`)
 				},
 				{
 					name: "Embed?",
-					value: "```css\n" + (editEmbed ? "Yes" : "No") + "```"
+					value: MessageFunctions.codeBlockIt(editEmbed ? "Yes" : "No")
 				},
 				{
 					name: "Direct Message?",
-					value: "```css\n" + (editDM ? "Yes" : "No") + "```"
+					value: MessageFunctions.codeBlockIt(editDM ? "Yes" : "No")
 				}
 			]), 10000);
 		});

@@ -2,6 +2,7 @@ import { Client, GuildMember, RichEmbed, TextChannel, Collection, Invite, Guild,
 import TurkieBotGuild, { GuildInterface } from "../Models/TurkieBotGuild";
 import { EnhancedDates } from "../Utility/EnhancedDates";
 import { Colors } from "../Configuration/Configuration";
+import MessageFunctions from "../Utility/MessageFunctions";
 
 const antiRaid: {
 	[name: string]: GuildMember[]
@@ -102,9 +103,9 @@ module.exports.run = async (client: Client, member: GuildMember): Promise<void> 
 				.setAuthor(member.user.tag, member.user.displayAvatarURL)
 				.setTitle("📥 New Member Joined")
 				.setDescription(`${member} has joined ${member.guild.name}`)
-				.addField("Joined Server", "```css\n" + date.formatUTCDate(member.joinedTimestamp) + "```", true)
-				.addField("Registered Account", "```css\n" + date.formatUTCDate(member.user.createdTimestamp) + "```")
-				.addField("User ID", "```css\n" + member.id + "```", true)
+				.addField("Joined Server", MessageFunctions.codeBlockIt(date.formatUTCDate(member.joinedTimestamp)))
+				.addField("Registered Account", MessageFunctions.codeBlockIt(date.formatUTCDate(member.user.createdTimestamp)))
+				.addField("User ID", MessageFunctions.codeBlockIt(member.id))
 				.setThumbnail(member.user.displayAvatarURL)
 				.setTimestamp()
 				.setColor(Colors.randomElement())

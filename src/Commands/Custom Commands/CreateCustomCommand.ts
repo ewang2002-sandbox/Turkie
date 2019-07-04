@@ -107,19 +107,19 @@ export default class CreateCustomCommand extends Command {
 			MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Custom Command Created", "You have created a new custom command.", [
 				{
 					name: "Command Name",
-					value: "```css\n" + commandName + "```"
+					value: MessageFunctions.codeBlockIt(commandName)
 				},
 				{
 					name: "Response",
-					value: `${commandInfo.length < 1000 ? commandInfo : commandInfo.slice(0, 1000) + "..."}`
+					value: MessageFunctions.codeBlockIt(`${commandInfo.length < 1000 ? commandInfo : commandInfo.slice(0, 1000) + "..."}`)
 				},
 				{
 					name: "Embed?",
-					value: "```css\n" + (embed ? "Yes" : "No") + "```"
+					value: MessageFunctions.codeBlockIt(embed ? "Yes" : "No")
 				},
 				{
 					name: "Direct Message?",
-					value: "```css\n" + (dm ? "Yes" : "No") + "```"
+					value: MessageFunctions.codeBlockIt(dm ? "Yes" : "No")
 				}
 			]), 10000);
 		});

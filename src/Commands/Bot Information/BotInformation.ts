@@ -2,6 +2,7 @@ import { Command } from "../../Models/Command";
 import { Client, Message, RichEmbed } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import { Colors } from "../../Configuration/Configuration";
+import MessageFunctions from "../../Utility/MessageFunctions";
 
 export default class BotInformation extends Command {
 	public constructor(client: Client) {
@@ -12,32 +13,33 @@ export default class BotInformation extends Command {
 			usage: [],
 			example: []
 		}, {
-				commandName: "Bot Information",
-				botPermissions: [],
-				userPermissions: [],
-				argsLength: 0,
-				guildOnly: false,
-				botOwnerOnly: false
-			});
+			commandName: "Bot Information",
+			botPermissions: [],
+			userPermissions: [],
+			argsLength: 0,
+			guildOnly: false,
+			botOwnerOnly: false
+		});
 	}
 
 	public async execute(client: Client, message: Message, args: string[], guildInfo: GuildInterface): Promise<void> {
 		let time = this.convertMS(client.uptime);
 		const embed: RichEmbed = new RichEmbed()
 			.setColor(Colors.randomElement())
+			.setImage("https://github.com/ewang20027/Turkie/raw/master/images/Turkie.png")
 			.setAuthor(client.user.tag, client.user.displayAvatarURL)
-			.setTitle("**Bot Information: Turkie**")
+			.setTitle(`**Bot Information: Turkie (${require("../../../package.json").version})**`)
 			.setDescription("Turkie is a bot that primarily focuses on moderation. It was designed with the following ideas in mind.\n- To be free for everyone to use (i.e. no paywall behind features).\n- To be free of bloat (i.e. no useless commands that will slow the bot down).\n- To be clear, complete, and concise (i.e. easy to use).")
 			.addField("Framework", "`Discord.JS` ⇨ [discord.js.org](https://discord.js.org/)", true)
 			.addField("Language", "`TypeScript` ⇨ [typescriptlang.org](https://www.typescriptlang.org/)", true)
 			.addField("Developer", "`Edward#7307` ⇨ [Github](https://github.com/ewang20027)", true)
 			.addField("Repository", "`Turkie` ⇨ [Github](https://github.com/ewang20027/turkie)", true)
 			.addBlankField()
-			.addField("Uptime", "```css\n" + (`${time.day}:${time.hour}:${time.minute}:${time.seconds}`) + "```", true)
-			.addField("Server Count", "```css\n" + client.guilds.size.toString() + "```", true)
-			.addField("User Count", "```css\n" + client.users.size.toString() + "```", true)
-			.addField("Channel Count", "```css\n" + client.channels.size.toString() + "```", true)
-			.addField("Memory Usage", "```css\n" + (`${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`) + "```", true);
+			.addField("Uptime", MessageFunctions.codeBlockIt(`${time.day}:${time.hour}:${time.minute}:${time.seconds}`), true)
+			.addField("Server Count", MessageFunctions.codeBlockIt(client.guilds.size.toString()), true)
+			.addField("User Count", MessageFunctions.codeBlockIt(client.users.size.toString()), true)
+			.addField("Channel Count", MessageFunctions.codeBlockIt(client.channels.size.toString()), true)
+			.addField("Memory Usage", MessageFunctions.codeBlockIt(`${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`), true);
 		message.channel.send(embed).catch(e => { });
 	}
 
@@ -52,9 +54,9 @@ export default class BotInformation extends Command {
 		minute: number | string,
 		seconds: number | string
 	} {
-		let day: number | string, 
-			hour: number | string, 
-			minute: number | string, 
+		let day: number | string,
+			hour: number | string,
+			minute: number | string,
 			seconds: number | string;
 		seconds = Math.floor(milliseconds / 1000);
 		minute = Math.floor(seconds / 60);
@@ -77,6 +79,6 @@ export default class BotInformation extends Command {
 	 * @returns {number | string} The result.
 	 */
 	private pad(amt: number): number | string {
-		return amt < 10 ? '0' + amt : amt; 
+		return amt < 10 ? '0' + amt : amt;
 	}
 }

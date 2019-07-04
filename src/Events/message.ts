@@ -11,7 +11,7 @@ module.exports.run = async (client: Client, message: Message): Promise<void> => 
 	}
 
 	if (message.webhookID || message.type === "GUILD_MEMBER_JOIN") {
-		return
+		return;
 	}
 
 	const person = await getMember(client, message);
@@ -23,6 +23,11 @@ module.exports.run = async (client: Client, message: Message): Promise<void> => 
 			if (!res) {
 				const newInformation: MongoDB.MongoDBGuildHandler = new MongoDB.MongoDBGuildHandler(message.guild.id);
 				await newInformation.createGuildData();
+			}
+
+			if (res.serverConfiguration.deletePinNotifications && message.type === "PINS_ADD") {
+				await message.delete().catch(e => { });
+				return;
 			}
 
 			// get the exempt roles

@@ -6,6 +6,7 @@ import fs from "fs";
 import NumberFunctions from "../../Utility/NumberFunctions";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import { DefaultPrefix, Colors } from "../../Configuration/Configuration";
+import MessageFunctions from "../../Utility/MessageFunctions";
 
 export default class BotHelp extends Command {
 	public constructor(client: Client) {
@@ -29,7 +30,7 @@ export default class BotHelp extends Command {
 	public async execute(client: Client, message: Message, args: string[], guildInfo: GuildInterface): Promise<void> {
 		let commandToSearchFor: string = args[0];
 		// make new command class
-		const command = new CommandManager(client, commandToSearchFor);
+		const command: CommandManager = new CommandManager(client, commandToSearchFor);
 
 		// find command
 		if (command.findCommand()) {
@@ -39,7 +40,7 @@ export default class BotHelp extends Command {
 
 		let commands: string[] = [];
 		let mods: string[] = [];
-		let fields: any = [];
+		let fields: [string, string, number][] = [];
 
 		// Find all commands in the /Commands folder.
 		const loadRecursive = (dir: string) => {
@@ -58,7 +59,7 @@ export default class BotHelp extends Command {
 			});
 			let directorypath = dir.split(/[\\/]/)[dir.split(/[\\/]/).length - 1];
 			if (!directorypath.toLowerCase().includes("commands") || commands.length !== 0) {
-				fields.push([directorypath, "```css\n" + commands.join(" • ") + "```", commands.length]);
+				fields.push([directorypath, MessageFunctions.codeBlockIt(commands.join(" • ")), commands.length]);
 				mods.push(directorypath);
 			}
 			commands = [];

@@ -10,7 +10,7 @@ export default class ConfigStrikes extends Command {
 			name: "configstrikes",
 			aliases: [],
 			description: "Configures the maximum amount of strikes a user can have before being punished and the punishment if users do meet or exceed the maximum strike amount.",
-			usage: ["configstrikes <Maximum Strikes: NUMBER>", "configstrikes <Punishment: "],
+			usage: ["configstrikes <Maximum Strikes: NUMBER>", "configstrikes <Punishment: nothing | mute | kick | ban>"],
 			example: []
 		}, {
 			commandName: "Configure Strikes",

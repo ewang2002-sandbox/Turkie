@@ -57,6 +57,7 @@ export default class Move extends Command {
 			d.addField(`VC (Part ${i})`, str, true);
 			allDescFields.push(str);
 			voiceChannels = voiceChannels.slice(5);
+			str = "";
 		}
 
 		message.channel.send(d).then(async msg => {

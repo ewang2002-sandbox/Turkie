@@ -49,11 +49,11 @@ export default class CustomCommandInfo extends Command {
 				.setDescription(`This command was created on ${date.formatUTCDate(info.commandCreatedAt)}.`)
 				.setFooter("Custom Commands")
 				.setColor(Colors.randomElement())
-				.addField("Command Name", "```css\n" + info.name + "```")
-				.addField("Author", client.users.get(info.creator))
-				.addField("Response", (info.commandanswer.length > 1000) ? info.commandanswer.substring(0, 1000) + "..." : info.commandanswer)
-				.addField("Is Embed", "```css\n" + (info.embed ? "Yes" : "No") + "```")
-				.addField("Is DM", "```css\n" + (info.dm ? "Yes" : "No") + "```");
+				.addField("Command Name", MessageFunctions.codeBlockIt(info.name))
+				.addField("Author", MessageFunctions.codeBlockIt("" + client.users.get(info.creator)))
+				.addField("Response", MessageFunctions.codeBlockIt((info.commandanswer.length > 1000) ? info.commandanswer.substring(0, 1000) + "..." : info.commandanswer))
+				.addField("Is Embed", MessageFunctions.codeBlockIt(info.embed ? "Yes" : "No"))
+				.addField("Is DM", MessageFunctions.codeBlockIt(info.dm ? "Yes" : "No"));
 			message.channel.send(d).catch(e => { });
 		} else {
 			MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Command Not Found", "The command you tried looking for wasn't found."));

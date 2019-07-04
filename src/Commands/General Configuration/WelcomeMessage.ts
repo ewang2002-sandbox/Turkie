@@ -67,7 +67,7 @@ export default class WelcomeMessage extends Command {
 				},
 				{
 					name: "Embed?",
-					value: "```css\n" + (embed ? "Yes" : "No") + "```"
+					value: MessageFunctions.codeBlockIt(embed ? "Yes" : "No")
 				}
 			]), 10000);
 		});

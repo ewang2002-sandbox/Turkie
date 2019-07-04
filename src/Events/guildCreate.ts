@@ -15,7 +15,7 @@ module.exports.run = async (client: Client, guild: Guild): Promise<void> => {
 		.addField("Server Channels", guild.channels.size, true)
 		.addField("Server Roles", guild.roles.size, true)
 		.setColor(Colors.randomElement());
-	if (LogGuildAddRemove && client.channels.has(LogGuildAddRemove)) {
+	if (LogGuildAddRemove.length > 0 && client.channels.has(LogGuildAddRemove)) {
 		(client.channels.get(LogGuildAddRemove) as TextChannel).send(embed).catch(e => { });
 	}
 

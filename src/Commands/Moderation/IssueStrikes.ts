@@ -8,7 +8,7 @@ export default class IssueStrikes extends Command {
 	public constructor(client: Client) {
 		super(client, {
 			name: "issuestrikes",
-			aliases: ["strikes", "strike"],
+			aliases: ["strikes", "strike", "issuestrike"],
 			description: "Issues a specific amount of strikes.",
 			usage: ["issuestrikes <@Mentions> [@Mentions...] <Amount of Strikes: NUMBER>"],
 			example: ["issuestrikes @User#0001 1", "issuestrikes @User#0001 @User#0002 3", "issuestrikes @User#0001 @User#0002 @User#9999 -1"]
@@ -75,7 +75,7 @@ export default class IssueStrikes extends Command {
 			},
 			{
 				name: "Issued Strikes",
-				value: "```css\n" + strikes + "```"
+				value: MessageFunctions.codeBlockIt(strikes.toString())
 			}
 		]);
 		message.channel.send(embed).then(async msg => {

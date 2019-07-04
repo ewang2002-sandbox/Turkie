@@ -144,6 +144,16 @@ export default class MessageFunctions {
 		});
 
 	}
+
+	/**
+	 * Applies code blocks to a string.
+	 * @param {string} content The content to apply code blocks to.
+	 * @param {string} code The code for the code blocks. Default is `css`.
+	 * @returns {string} The code blocks.
+	 */
+	public static codeBlockIt(content: string, code: string = "css"): string {
+		return "```" + code + "\n" + (content) + "```";
+	}
 }
 
 interface EmbedField {

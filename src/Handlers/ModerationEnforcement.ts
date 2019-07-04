@@ -464,7 +464,7 @@ export class ModerationEnforcement {
 			.setDescription(`Reason: ${reason}`)
 			.addField("Users", `${mem.join(" ")}`)
 			.addField("Moderator", `${this.msg.author} (${this.msg.author.tag})`)
-			.addField("Strikes", "```css\n" + strikeAmount + "```")
+			.addField("Strikes", MessageFunctions.codeBlockIt(strikeAmount.toString()))
 			.setFooter("Turkie Moderation");
 		MessageFunctions.sendRichEmbed(this.msg, embedForSend);
 		if (ModerationEnforcement.configuredModLogs(this.msg, this.res)) {

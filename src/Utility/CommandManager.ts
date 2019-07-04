@@ -2,6 +2,7 @@ import { DiscordBot } from "../Bot";
 import { Command } from "../Models/Command";
 import { RichEmbed, Client } from "discord.js";
 import { Colors } from "../Configuration/Configuration";
+import MessageFunctions from "./MessageFunctions";
 
 /**
  * Command manager, the basis for most command-based functions.
@@ -77,18 +78,18 @@ export class CommandManager {
 			.setColor(Colors.randomElement())
 			.setDescription(command.description)
 			.setFooter("<> Indicate Required. [] Indicate Optional. Do NOT Include <> & [].")
-			.addField("Command Name", "```css\n" + command.name + "```", true)
-			.addField(`Aliases`, "```css\n" + aliases + "```", true)
+			.addField("Command Name", MessageFunctions.codeBlockIt(command.name), true)
+			.addField(`Aliases`, MessageFunctions.codeBlockIt(aliases), true)
 			.addBlankField()
-			.addField("Bot Owner Only?", "```css\n" + bowner + "```", true)
-			.addField("Guild Only?", "```css\n" + gonly + "```", true)
+			.addField("Bot Owner Only?", MessageFunctions.codeBlockIt(bowner), true)
+			.addField("Guild Only?", MessageFunctions.codeBlockIt(gonly), true)
 			.addBlankField()
-			.addField(`Arguments Required`, "```css\n" + command.argsLength + "```", true)
-			.addField(`User Permissions`, "```css\n" + userperms + "```", true)
-			.addField(`Bot Permissions`, "```css\n" + botperms + "```", true)
+			.addField(`Arguments Required`, MessageFunctions.codeBlockIt(command.argsLength.toString()), true)
+			.addField(`User Permissions`, MessageFunctions.codeBlockIt(userperms), true)
+			.addField(`Bot Permissions`, MessageFunctions.codeBlockIt(botperms), true)
 			.addBlankField()
-			.addField(`Command Usage`, "```css\n" + cmdusage + "```", true)
-			.addField(`Examples`, "```css\n" + examples + "```", true)
+			.addField(`Command Usage`, MessageFunctions.codeBlockIt(cmdusage), true)
+			.addField(`Examples`, MessageFunctions.codeBlockIt(examples), true)
 			.setTimestamp();
 
 		return helpEmbed;
