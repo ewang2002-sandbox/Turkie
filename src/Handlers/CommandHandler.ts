@@ -129,7 +129,7 @@ export class CommandHandler {
 			// check arg length.
 			if (execCommand.argsLength > args.length) {
 				let helpErrEmbed: RichEmbed = cmdManager.helpCommand();
-				MessageFunctions.sendRichEmbed(this.msg, helpErrEmbed);
+				this.msg.channel.send(helpErrEmbed).catch(e => { });
 				return;
 			}
 

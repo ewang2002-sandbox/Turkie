@@ -3,6 +3,7 @@ import TurkieBotGuild, { GuildInterface } from "../Models/TurkieBotGuild";
 import { Colors } from "../Configuration/Configuration";
 import NumberFunctions from "../Utility/NumberFunctions";
 import MessageFunctions from "../Utility/MessageFunctions";
+import { EnhancedDates } from "../Utility/EnhancedDates";
 
 /**
  * ModerationEnforcement is mainly designed with automoderation in mind. However, there are a few methods that can be utilized for public use.
@@ -185,7 +186,7 @@ export class ModerationEnforcement {
 			}
 
 			await gMember.send(new RichEmbed()
-				.setAuthor(this.msg.client.user, this.msg.client.user.displayAvatarURL)
+				.setAuthor(this.msg.client.user.tag, this.msg.client.user.displayAvatarURL)
 				.setTitle("👢 **Kicked**")
 				.setDescription(`You have been kicked from **${this.msg.guild.name}**.`)
 				.addField("**Moderator**", `${this.msg.client.user} (${this.msg.client.user.id})`)
@@ -197,7 +198,7 @@ export class ModerationEnforcement {
 			// mod log it
 			if (ModerationEnforcement.configuredModLogs(this.msg, this.res)) {
 				const embed: RichEmbed = new RichEmbed()
-					.setAuthor(this.msg.client.user, this.msg.client.user.displayAvatarURL)
+					.setAuthor(this.msg.client.user.tag, this.msg.client.user.displayAvatarURL)
 					.setTitle("👢 **AutoMod Kick**")
 					.setDescription("A member has been kicked from the server for activating automoderation.")
 					.addField("Moderator", `${this.msg.client.user} (${this.msg.client.user.id})`)
@@ -227,7 +228,7 @@ export class ModerationEnforcement {
 			}
 
 			await gMember.send(new RichEmbed()
-				.setAuthor(this.msg.client.user, this.msg.client.user.displayAvatarURL)
+				.setAuthor(this.msg.client.user.tag, this.msg.client.user.displayAvatarURL)
 				.setTitle("🔨 **Banned**")
 				.setDescription(`You have been banned from **${this.msg.guild.name}**.`)
 				.addField("**Moderator**", `${this.msg.client.user} (${this.msg.client.user.id})`)
@@ -239,7 +240,7 @@ export class ModerationEnforcement {
 			// mod log it
 			if (ModerationEnforcement.configuredModLogs(this.msg, this.res)) {
 				const embed: RichEmbed = new RichEmbed()
-					.setAuthor(this.msg.client.user, this.msg.client.user.displayAvatarURL)
+					.setAuthor(this.msg.client.user.tag, this.msg.client.user.displayAvatarURL)
 					.setTitle("🔨 **AutoMod Ban**")
 					.setDescription("A member has been banned for from server for activating automoderation.")
 					.addField("Moderator", `${this.msg.client.user} (${this.msg.client.user.id})`)
@@ -280,6 +281,7 @@ export class ModerationEnforcement {
 	 * @returns {Promise<boolean>} Whether the strikes were applied successfully. 
 	 */
 	public async strikeManagement(autoModeration: boolean, reason: string = "No reason specified", strikeAmount: number = 1): Promise<boolean> {
+		const d: EnhancedDates = new EnhancedDates();
 		return new Promise((resolve, reject) => {
 			let strikeHist = this.res.moderation.moderationConfiguration.currentStrikes;
 			// if we have more than one member to punish
@@ -332,7 +334,10 @@ export class ModerationEnforcement {
 						TurkieBotGuild.updateOne({ guildID: this.msg.guild.id, "moderation.moderationConfiguration.currentStrikes.id": this.mem[i].id }, {
 							$inc: {
 								"moderation.moderationConfiguration.currentStrikes.$.strikes": strikeAmount
-							}
+							},
+							"moderation.moderationConfiguration.currentStrikes.$.reason": reason,
+							"moderation.moderationConfiguration.currentStrikes.$.moderator": autoModeration ? this.msg.client.user.id : this.msg.member.id,
+							"moderation.moderationConfiguration.currentStrikes.$.dateIssued": d.getTime()
 						}, (err, raw) => {
 							if (!err) {
 								this.issueStrikeAlert(this.mem[i], strikeAmount, resultantData.strikes, autoModeration, this.mem.length > 1, false, reason);
@@ -351,7 +356,10 @@ export class ModerationEnforcement {
 							$push: {
 								"moderation.moderationConfiguration.currentStrikes": {
 									id: this.mem[i].id,
-									strikes: strikeAmount
+									strikes: strikeAmount,
+									reason: reason,
+									moderator: autoModeration ? this.msg.client.user.id : this.msg.member.id,
+									dateIssued: d.getTime()
 								}
 							}
 						}, (err, raw) => {
@@ -421,7 +429,7 @@ export class ModerationEnforcement {
 				.setTitle(`🚩 **Strike(s) ${strikeAmount > 0 ? "Issued" : "Removed"}**`)
 				.setColor(Colors.randomElement())
 				.setDescription(`${strikeAmount > 0 ? `You have received \`${strikeAmount}\` strike(s) in \`${this.msg.guild.name}\`.` : `A moderator has removed \`${Math.abs(strikeAmount)}\` strike(s) from your profile in \`${this.msg.guild.name}\`.`}`)
-				.addField("**Current Strikes**", `\`${oldStr}\` → \`${oldStr + strikeAmount}\``)
+				.addField("**Current Strikes**", `\`${oldStr}\` → \`${(oldStr + strikeAmount) < 0 ? 0 : oldStr + strikeAmount}\``)
 				.addField("**Moderator**", autoMod ? `${this.msg.client.user} (${this.msg.client.user.tag})` : `${this.msg.author} (${this.msg.author.tag})`)
 				.addField("**Reason**", reason)
 				.setFooter("Turkie Moderation"));
@@ -435,7 +443,7 @@ export class ModerationEnforcement {
 			.setDescription(`Reason: ${reason}`)
 			.addField("User", `${mem} (${mem.id})`)
 			.addField("Moderator", autoMod ? `${this.msg.client.user} (${this.msg.client.user.tag})` : `${this.msg.author} (${this.msg.author.tag})`)
-			.addField("Current Strikes", `\`${oldStr}\` → \`${oldStr + strikeAmount}\``)
+			.addField("Current Strikes", `\`${oldStr}\` → \`${(oldStr + strikeAmount) < 0 ? 0 : oldStr + strikeAmount}\``)
 			.setFooter("Turkie Moderation");
 		// we only want to send this msg if one user is affected.
 		if (!multiple) {

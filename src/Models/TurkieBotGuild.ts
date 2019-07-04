@@ -19,6 +19,9 @@ export interface GuildInterface extends Document {
 			currentStrikes: Array<{
 				id: string;
 				strikes: number;
+				reason: string;
+				moderator: string;
+				dateIssued: number;
 			}>;
 			punishment: PunishmentTypes;
 		};

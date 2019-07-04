@@ -42,33 +42,65 @@ export default class IssueStrikes extends Command {
 		for (let [id, member] of message.mentions.members) {
 			members.push(member);
 		}
-		// start collector
-		const collector: MessageCollector = new MessageCollector(message.channel, m => m.author.id === message.author.id, {
-			time: 300000
-		});
 
 		const membersToPunish: GuildMember[] = [];
+		const membersWithKickPermissions: GuildMember[] = [];
+		const membersThatIsBot: GuildMember[] = [];
+		const membersHigherRole: GuildMember[] = [];
+
 		for (let member of members) {
 			let isFound = false;
 			for (let i = 0; i < guildInfo.moderation.moderationConfiguration.currentStrikes.length; i++) {
-				if (guildInfo.moderation.moderationConfiguration.currentStrikes[i].id === member.id
-					&& guildInfo.moderation.moderationConfiguration.currentStrikes[i].strikes + strikes >= 0) {
+				// check to make sure the profile doesn't exist in the array
+				//if (guildInfo.moderation.moderationConfiguration.currentStrikes[i].id === member.id
+				//	&& guildInfo.moderation.moderationConfiguration.currentStrikes[i].strikes + strikes >= 0) {
+				if (guildInfo.moderation.moderationConfiguration.currentStrikes[i].id === member.id) {
 					membersToPunish.push(member);
 					isFound = true;
 					break;
-				} 
+				}
 			}
-			if (!isFound) {
+			if (!isFound && strikes > 0) {
+				// make sure the member isn't a bot
+				if (member.user.bot) {
+					membersThatIsBot.push(member);
+					continue;
+				}
+
+				// make sure not equal/above in role hierachy
+				if (message.author.id !== message.guild.ownerID && message.member.highestRole.comparePositionTo(member.highestRole) <= 0) {
+					membersHigherRole.push(member);
+					continue;
+				}
+
+				// make sure no perms
+				if (member.hasPermission("KICK_MEMBERS")) {
+					membersWithKickPermissions.push(member);
+					continue;
+				}
+
 				membersToPunish.push(member);
 			}
 		}
 
 		if (membersToPunish.length === 0) {
-			MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "No Members To Strike", "The bot will only remove strikes if the final strike value is not less than zero."));
+			const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "No Members To Strike", "You cannot add or remove strikes from members for the following reasons.\n- The member is a bot.\n- The member has the `Kick Members` Permission.\n- The member is equal or above you based on role hierachy.\n\nAlso remember that you cannot remove strikes from a user if he or she has no strikes.");
+			if (membersWithKickPermissions.length > 0) {
+				embed.addField("User(s) With **Kick Members** Permissions", membersWithKickPermissions.join(" "));
+			}
+
+			if (membersThatIsBot.length > 0) {
+				embed.addField("Bot Accounts", membersThatIsBot.join(" "));
+			}
+
+			if (membersHigherRole.length > 0) {
+				embed.addField("User(s) With Higher/Equal Role Position", membersHigherRole.join(" "));
+			}
+			MessageFunctions.sendRichEmbed(message, embed, 12000);
 			return;
 		}
 
-		const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Specify Reason For Strike(s)", "Please input a reason for the strikes. If you do not want to give a reason, please type `none`. To cancel this process, type `cancel`.", [
+		const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Specify Reason For Strike(s)", `Please input a reason for the strikes. If you do not want to give a reason, please type \`none\`. To cancel this process, type \`cancel\`.\n\n${membersWithKickPermissions.length > 0 ? "⚠ You are unable to strike members with the `Kick Members` permission.\n" : ""}${membersThatIsBot.length > 0 ? "⚠ You are unable to strike a bot.\n" : ""}${membersHigherRole.length > 0 ? "⚠ You are unable to strike members with equal or higher role positions than your position (based on role hierachy)." : ""}`, [
 			{
 				name: "Users To Strike",
 				value: membersToPunish.join(" ")
@@ -78,6 +110,30 @@ export default class IssueStrikes extends Command {
 				value: MessageFunctions.codeBlockIt(strikes.toString())
 			}
 		]);
+
+		if (membersWithKickPermissions.length > 0
+			|| membersThatIsBot.length > 0
+			|| membersHigherRole.length > 0) {
+			embed.addBlankField();
+
+			if (membersWithKickPermissions.length > 0) {
+				embed.addField("Has Kick Members Permission", membersWithKickPermissions.join(" "));
+			}
+
+			if (membersThatIsBot.length > 0) {
+				embed.addField("Is Bot", membersThatIsBot.join(" "));
+			}
+
+			if (membersHigherRole.length > 0) {
+				embed.addField("Higher Role Position", membersHigherRole.join(" "));
+			}
+		}
+
+		// start collector
+		const collector: MessageCollector = new MessageCollector(message.channel, m => m.author.id === message.author.id, {
+			time: 300000
+		});
+
 		message.channel.send(embed).then(async msg => {
 			collector.on("collect", (m) => {
 				if (m.content === "cancel") {
