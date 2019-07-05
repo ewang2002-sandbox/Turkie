@@ -324,6 +324,8 @@ export default class SendEmbed extends Command {
 								return;
 							}
 
+							m.delete().catch(e => { });
+
 							(resolvedChannel as TextChannel).send(embed).catch(e => { });
 							(promptMsg as Message).delete().catch(e => { });
 							collector.stop();

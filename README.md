@@ -34,15 +34,15 @@ However, if you're like me (where you want to be in control of everything), I co
 
 # Turkie Team
 The format is first & last name, Github tag, and their roles.
-### Programmers
+### Programmer
 - Edward (@ewang20027) - Lead developer, owner of Turkie.
-- Dakota (@icicl) - Developer, helper.
-- Huy (@haku_c) - Developer, helper.
-- Trevor (@trevnerd) - Developer, helper.
-- Ian (@IanLulz) - Helper, hoster.
 
 ### Helpers
 - Koubi (@slippard) - Teaching me the basics of MongoDB (which helped with a previous rework of TurkieBot).
+- Dakota (@icicl) - Helper.
+- Huy (@haku_c) - Helper.
+- Trevor (@trevnerd) - Helper.
+- Ian (@IanLulz) - Helper, hoster.
 
 ### Artist & Misc.
 - Cassie - Profile picture artist.
