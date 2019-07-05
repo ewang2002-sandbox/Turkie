@@ -34,7 +34,6 @@ export default class SendEmbed extends Command {
 	public async execute(client: Client, message: Message, args: string[], guildInfo: GuildInterface): Promise<void> {
 		let isChanging = false;
 		const embed: RichEmbed = new RichEmbed();
-		const introductionEmbed: RichEmbed = this.editEmbedWithLimit(this.introEmbed, embed);
 
 		let fields: number = 0;
 
@@ -181,7 +180,7 @@ export default class SendEmbed extends Command {
 
 						let inline: boolean = false;
 						while (true) {
-							const inlineField: string = await this.waitForTextResponse(msg, "Do you want to make this field inline? Type `yes` or `no`.", 3, message);
+							const inlineField: string = await this.waitForTextResponse(msg, "Do you want to make this field inline? Type `yes` or `no`.", 5, message);
 							if (!this.evaluateResponse(inlineField)) {
 								isChanging = false;
 								return;
@@ -365,7 +364,7 @@ export default class SendEmbed extends Command {
 
 	/**Evaluates a response and checks to make sure system didn't end it. */
 	private evaluateResponse(resp: string): boolean {
-		if (resp === "CANCEL"
+		if (resp === "CANCEL_PROCESS"
 			|| resp === "NO_RESP") {
 			return false;
 		}
