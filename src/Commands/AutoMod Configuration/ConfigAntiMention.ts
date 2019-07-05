@@ -32,13 +32,13 @@ export default class ConfigAntiMention extends Command {
 					MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 					return;
 				} else {
-					const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, `AntiMention ${!guildInfo.moderation.antiMention.isEnabled ? "Enabled" : "Disabled"}`, `${!guildInfo.moderation.wordFilter.isEnabled ? "AntiMention has been enabled successfully." : "AntiMention has been disabled successfully."}`);
+					const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, `AntiMention ${!guildInfo.moderation.antiMention.isEnabled ? "Enabled" : "Disabled"}`, `${!guildInfo.moderation.antiMention.isEnabled ? "AntiMention has been enabled successfully." : "AntiMention has been disabled successfully."}`);
 					MessageFunctions.sendRichEmbed(message, embed);
 				}
 			});
 			return;
 		} else {
-			const num: number = Number.parseFloat(args.join(" "));
+			const num: number = Number.parseInt(args.join(" "));
 			if (!Number.isNaN(num)) {
 				TurkieBotGuild.updateOne({ guildID: message.guild.id }, {
 					"moderation.antiMention.theshold": num
@@ -47,7 +47,7 @@ export default class ConfigAntiMention extends Command {
 						MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 						return;
 					} else {
-						const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, `AntiMention ${!guildInfo.moderation.antiMention.isEnabled ? "Enabled" : "Disabled"}`, `${!guildInfo.moderation.wordFilter.isEnabled ? "AntiMention has been enabled successfully." : "AntiMention has been disabled successfully."}`);
+						const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "AntiMention Updated", `AntiMention will now be triggered at ${num} mentions.`);
 						MessageFunctions.sendRichEmbed(message, embed);
 						return;
 					}
