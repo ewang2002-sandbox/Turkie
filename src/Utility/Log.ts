@@ -1,4 +1,4 @@
-import { createWriteStream } from "fs";
+import { createWriteStream, existsSync, openSync } from "fs";
 import { EnhancedDates } from "./EnhancedDates";
 
 /**
@@ -27,6 +27,10 @@ export default class Log {
 			}
 		} else {
 			errmsg = this.message;
+		}
+
+		if (!existsSync("./logs/ErrorLogs.txt")) {
+			openSync("./logs/ErrorLogs.txt", 'w');
 		}
 
 		const stream = createWriteStream('./logs/ErrorLogs.txt', {

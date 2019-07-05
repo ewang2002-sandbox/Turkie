@@ -279,7 +279,7 @@ export default class SendEmbed extends Command {
 							return;
 						}
 						if (resp.includes("#")) {
-							response = (parseInt(resp.substr(1), 16) << 8) / 256
+							response = this.HEXToVBColor(resp);
 							break;
 						} else {
 							MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Invalid Color Added", "Please input a valid color HEX value. Color HEX values start with a #."));
@@ -410,5 +410,10 @@ export default class SendEmbed extends Command {
 	private editEmbedWithLimit(embed: RichEmbed, rEmbed: RichEmbed): RichEmbed {
 		embed.setFooter(`Fields Used: ${rEmbed.fields.length}/25 • Characters Used: ${rEmbed.length}/6000`);
 		return embed;
+	}
+
+	/**Converts HEX value to its respective integer value. */
+	private HEXToVBColor(rrggbb: string): number {
+		return parseInt(rrggbb.replace(/^#/, ''), 16);
 	}
 }
