@@ -57,7 +57,7 @@ export class CommandHandler {
 			if (execCommand.botOwnerOnly) {
 				if (this.msg.author.id !== owner.id) {
 					let errNoOwner: RichEmbed = MessageFunctions.createMsgEmbed(this.msg, "Denied", "You are not the bot's owner.");
-					this.msg.channel.send(errNoOwner).catch(e => { });
+					MessageFunctions.sendRichEmbed(this.msg, errNoOwner);
 					return;
 				}
 			}
@@ -65,7 +65,7 @@ export class CommandHandler {
 			// check to see if command is for guild only.
 			if (execCommand.guildOnly && !this.msg.guild) {
 				let cmdNoGuild: RichEmbed = MessageFunctions.createMsgEmbed(this.msg, "Command Guild Only", "The command can only be used in a guild.");
-				this.msg.channel.send(cmdNoGuild).catch(e => { });
+				MessageFunctions.sendRichEmbed(this.msg, cmdNoGuild).catch(e => { });
 				return;
 			}
 
