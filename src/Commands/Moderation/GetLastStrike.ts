@@ -42,6 +42,7 @@ export default class GetLastStrike extends Command {
 			.setAuthor(member.user.tag, member.user.displayAvatarURL)
 			.setTitle(`🚩 **Strike History**: ${member.user.tag} (${member.user.id})`)
 			.setColor(Colors.randomElement())
+			.setFooter("Turkie Moderation");
 
 		let data;
 		for (let i = 0; i < guildInfo.moderation.moderationConfiguration.currentStrikes.length; i++) {

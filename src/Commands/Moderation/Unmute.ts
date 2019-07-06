@@ -12,13 +12,13 @@ export default class Unmute extends Command {
 			name: "unmute",
 			aliases: [],
 			description: "Unmutes a user.",
-			usage: ["unmute <@Mention>[Reason: STRING]"],
+			usage: ["unmute <@Mention> [Reason: STRING]"],
 			example: ["unmute @User#0001", "unmute @User#0001 For behaving"]		
 		}, {
 			commandName: "Unmute",
 			botPermissions: ["MANAGE_ROLES"],
 			userPermissions: ["MUTE_MEMBERS"],
-			argsLength: 0,
+			argsLength: 1,
 			guildOnly: true,
 			botOwnerOnly: false
 		});

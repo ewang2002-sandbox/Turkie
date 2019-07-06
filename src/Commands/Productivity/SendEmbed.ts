@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed, MessageReaction, User, ReactionCollector, MessageCollector, Channel, TextChannel } from "discord.js";
+import { Client, Message, RichEmbed, MessageReaction, User, ReactionCollector, MessageCollector, Channel, TextChannel, MessageEmbed } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { Colors } from "../../Configuration/Configuration";
@@ -18,8 +18,8 @@ export default class SendEmbed extends Command {
 		super(client, {
 			name: "sendembed",
 			aliases: [],
-			description: "Uses a wizard to customize the looks of your embed. Then, allows you to send the embed to a channel of your choice.",
-			usage: ["sendembed"],
+			description: "Uses a wizard to customize the looks of your embed. Then, allows you to send the embed to a channel of your choice. If you include a channel mention and a message ID (authored by this bot), the bot grab the embed information.",
+			usage: ["sendembed", "sendembed [Channel Mention] [Message ID]"],
 			example: []
 		}, {
 				commandName: "Send Embed Message",
@@ -32,9 +32,44 @@ export default class SendEmbed extends Command {
 	}
 
 	public async execute(client: Client, message: Message, args: string[], guildInfo: GuildInterface): Promise<void> {
-		let isChanging = false;
-		const embed: RichEmbed = new RichEmbed();
+		let rChannel: Channel;
+		let rMessage: Message;
+		if (args.length > 1) {
+			let chan = message.mentions.channels.first() || args[0];
+			if (typeof chan === "string") {
+				if (message.guild.channels.has(chan)) {
+					rChannel = message.guild.channels.get(chan);
+				}
+			} else {
+				rChannel = chan;
+			}
 
+			try {
+				rMessage = await (rChannel as TextChannel).fetchMessage(args[1]);
+				if (rMessage.embeds.length === 0) {
+					MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "No Embed Found", "The message ID must have an embed."));
+					return;
+				}
+
+				if (rMessage.author.id !== client.user.id) {
+					MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Incorrect Author", "When selecting a message ID, the author corresponding to the ID must be me, the bot."));
+					return;
+				}
+			} catch (e) {
+				MessageFunctions.sendRichEmbed(message, MessageFunctions.msgConditions(message, "INVALID_ID", "message"));
+				return;
+			}
+		}
+
+
+		let isChanging = false;
+		let embed: RichEmbed;
+		if (rMessage && rMessage.embeds.length > 0) {
+			embed = new RichEmbed(rMessage.embeds[0]);
+		} else {
+			embed = new RichEmbed();
+		}
+		
 		let fields: number = 0;
 
 		let embedMessage: Message = await message.channel.send(embed) as Message;
@@ -289,6 +324,7 @@ export default class SendEmbed extends Command {
 					await msg.edit(this.editEmbedWithLimit(this.introEmbed, embed)).catch(e => { });
 					embed.setColor(response);
 				} else if (r.emoji.name === "💾") {
+					// begin saving embed
 					await msg.delete().catch(e => { });
 					await embedMessage.delete().catch(e => { });
 					await interact.stop();
@@ -319,6 +355,11 @@ export default class SendEmbed extends Command {
 								return;
 							}
 
+							if (!(resolvedChannel instanceof TextChannel)) {
+								MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Invalid Channel Type", "You may only send messages to a text channel. Should be pretty obvious."));
+								return;
+							}
+
 							if (!(resolvedChannel as TextChannel).permissionsFor(message.guild.me).has(["READ_MESSAGES", "SEND_MESSAGES"])) {
 								MessageFunctions.sendRichEmbed(message, MessageFunctions.msgConditions(message, "NO_CHAN_PERMISSIONS", "READ_MESSAGES", "SEND_MESSAGES"));
 								return;
@@ -336,6 +377,7 @@ export default class SendEmbed extends Command {
 						});
 					});
 					return;
+					// end save embed
 				} else if (r.emoji.name === "❌") {
 					await msg.delete().catch(e => { });
 					embedMessage.delete().catch(e => { });

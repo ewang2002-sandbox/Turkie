@@ -18,7 +18,7 @@ export default class Mute extends Command {
 			commandName: "Mute",
 			botPermissions: ["MANAGE_ROLES"],
 			userPermissions: ["MUTE_MEMBERS"],
-			argsLength: 0,
+			argsLength: 1,
 			guildOnly: true,
 			botOwnerOnly: false
 		});

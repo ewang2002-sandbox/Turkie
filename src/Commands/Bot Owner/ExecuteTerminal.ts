@@ -56,7 +56,7 @@ export default class ExecuteTerminal extends Command {
 					.setAuthor(message.author.tag, message.author.avatarURL)
 					.setTitle('Results')
 					.setColor(Colors.randomElement())
-					.addField('📥 Input', `\`\`\`bash\n${args}\n\`\`\``);
+					.addField('📥 Input', `\`\`\`bash\n${args.join(" ")}\n\`\`\``);
 			} else {
 				msgToSend = "";
 			}
