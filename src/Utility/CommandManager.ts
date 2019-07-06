@@ -1,4 +1,4 @@
-import { DiscordBot } from "../Bot";
+import { Turkie } from "../Bot";
 import { Command } from "../Models/Command";
 import { RichEmbed, Client } from "discord.js";
 import { Colors } from "../Configuration/Configuration";
@@ -10,8 +10,8 @@ import MessageFunctions from "./MessageFunctions";
 export class CommandManager {
 	// The command query, if any.
 	private command: string;
-	// The command list (access static member of DiscordBot).
-	private commandsList: Map<string, Command> = DiscordBot.commands;
+	// The command list (access static member of Turkie).
+	private commandsList: Map<string, Command> = Turkie.commands;
 	// The client.
 	private client: Client;
 

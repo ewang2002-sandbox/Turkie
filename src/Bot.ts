@@ -8,7 +8,7 @@ import { MongoDBConnectionURL } from "./Configuration/Configuration";
 /**
  * The basis for the Discord bot.
  */
-export class DiscordBot {
+export class Turkie {
 	private client: Client;
 	private token: string;
 	public static commands: Map<string, Command>;
@@ -27,7 +27,7 @@ export class DiscordBot {
 			]
 		});
 		this.token = token;
-		DiscordBot.commands = this.loadCommands();
+		Turkie.commands = this.loadCommands();
 		this.connect();
 		this.eventLoader();
 	}
@@ -66,18 +66,6 @@ export class DiscordBot {
 		const cmd = new LoadCommands(this.client);
 		let commands = cmd.loadCommands();
 		return commands;
-	}
-
-	/**
-	 * Reboots the bot. 
-	 * @static
-	 * @public
-	 */
-	public static async reboot(client: Client): Promise<void> {
-		await client.destroy();
-		setTimeout(() => {
-			client.login();
-		}, 3000);
 	}
 
 	/**

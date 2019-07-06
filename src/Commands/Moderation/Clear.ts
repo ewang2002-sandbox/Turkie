@@ -73,7 +73,7 @@ export default class Clear extends Command {
 			if (pUser) {
 				embed.addField("Purged User Messages?", `Purged ${message.mentions.users.first()}`);
 			}
-			if (purgePin) {
+			if (!purgePin) {
 				embed.addField("Purged Pins?", "Yes");
 			}
 		}

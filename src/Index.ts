@@ -1,4 +1,4 @@
-import { DiscordBot } from "./Bot";
+import { Turkie } from "./Bot";
 import { Token } from "./Configuration/Configuration";
 import Log from "./Utility/Log";
 
@@ -6,8 +6,8 @@ import Log from "./Utility/Log";
 require("./Prototypes/Array.prototype");
 require("./Prototypes/String.prototype");
 
-const TSBot = new DiscordBot(Token);
-TSBot.login();
+const TurkieBot = new Turkie(Token);
+TurkieBot.login();
 
 process.on("uncaughtException", (error) => {
 	const l: Log = new Log(error);
