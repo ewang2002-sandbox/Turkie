@@ -7,6 +7,7 @@
 # Configuration
 /src/Configuration/Configuration.ts
 /src/Configuration/Constants.ts
+/src/Configuration/ConfigurationInformation.txt
 
 # PFP
 /images/PFP.png
