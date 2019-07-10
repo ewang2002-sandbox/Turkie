@@ -9,7 +9,7 @@
 		"request": "^2.88.0"
 	},
 	"devDependencies": {
-		"@types/mongoose": "^5.5.7",
+		"@types/mongoose": "^5.5.8",
 		"@types/node": "^12.6.2",
 		"@types/request": "^2.48.1",
 		"typescript": "^3.5.1"
