@@ -76,8 +76,8 @@ export default class BotHelp extends Command {
 		let isFound: boolean = false,
 			len: number = null;
 
-		var field: any[] = [];
-		for (var i = 0; i < fields.length; i++) {
+		let field: any[] = [];
+		for (let i = 0; i < fields.length; i++) {
 			if (fields[i][0].toLowerCase().includes(modToFind.toLowerCase())) {
 				isFound = true;
 				field.push({
