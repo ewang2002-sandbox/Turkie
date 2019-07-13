@@ -9,7 +9,7 @@ module.exports.run = async (client: Client, guild: Guild): Promise<void> => {
 	const embed: RichEmbed = new RichEmbed()
 		.setAuthor(guild.name, guild.iconURL)
 		.setTitle("📤 Left Guild")
-		.setDescription(`The bot was kicked at ${time.formatUTCDate(time.getTime())}.`)
+		.setDescription(`The bot was kicked at ${EnhancedDates.formatUTCDate(time.getTime())}.`)
 		.addField("Member Count", guild.memberCount, true)
 		.addField("Server Owner", (`${guild.owner} ${guild.owner.id}`), true)
 		.setColor(Colors.randomElement());

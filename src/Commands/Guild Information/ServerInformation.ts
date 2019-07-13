@@ -23,17 +23,15 @@ export default class ServerInformation extends Command {
 	}
 
 	public async execute(client: Client, message: Message, args: string[], guildInfo: GuildInterface): Promise<void> {
-		const date: EnhancedDates = new EnhancedDates();
-		const online = client.emojis.get("536442518317957130"); // 469647586912108547
-		const idle = client.emojis.get("536442519152754698"); // 469647586811183125
-		const dnd = client.emojis.get("536442519169531914"); // 469647586635153408
-		const invisible = client.emojis.get("536442518603038721"); // 469647586752462858
-		const streaming = client.emojis.get("536442518938845185"); // 529392778585571328
+		const online: Emoji = client.emojis.get("536442518317957130"); // 469647586912108547
+		const idle: Emoji = client.emojis.get("536442519152754698"); // 469647586811183125
+		const dnd: Emoji = client.emojis.get("536442519169531914"); // 469647586635153408
+		const invisible: Emoji = client.emojis.get("536442518603038721"); // 469647586752462858
+		const streaming: Emoji = client.emojis.get("536442518938845185"); // 529392778585571328
 
-		let roles: [string, Role][] = Array.from(message.guild.roles);
 		let serverRoles: string = "@everyone, ";
-		for (let i = 1; i < roles.length; i++) {
-			serverRoles += `<@&${roles[i][0]}>, `;
+		for (const [id, roles] of message.guild.roles) {
+			serverRoles += `<@&${id}>, `;
 		}
 		serverRoles = serverRoles.replace(/,\s*$/, "");
 
@@ -51,7 +49,7 @@ export default class ServerInformation extends Command {
 			.setFooter("Turkie")
 			.setThumbnail(message.guild.iconURL)
 			.setTimestamp()
-			.setDescription(`This server was created on: ${date.formatUTCDate(message.guild.createdTimestamp)}`)
+			.setDescription(`This server was created on: ${EnhancedDates.formatUTCDate(message.guild.createdTimestamp)}`)
 			.addField('Region', message.guild.region.replace(/\W/g, ' ').toUpperCase(), true)
 			.addField('Owner', message.guild.owner.user, true)
 			.addField('Server ID', message.guild.id, true)
@@ -60,12 +58,10 @@ export default class ServerInformation extends Command {
 			.addField(`Members (${message.guild.members.filter(member => !member.user.bot).size} | ${message.guild.members.size})`, `${online} ${onlineCount}\n${idle} ${idleCount}\n${dnd} ${dndCount}\n${streaming} ${streamingCount}\n${invisible} ${offlineCount}`, true);
 
 		// Begin Emojis
-		let emojiArr: [string, Emoji][] = Array.from(message.guild.emojis);
-
 		let emojis: Emoji[] = [];
-		emojiArr.forEach(emote => {
-			emojis.push(emote[1]);
-		});
+		for (const [id, emoji] of message.guild.emojis) {
+			emojis.push(emoji);
+		}
 
 		let i = 0;
 		while (emojis.length > 0) {
@@ -75,12 +71,10 @@ export default class ServerInformation extends Command {
 		}
 
 		// Begin Roles
-		let roleArr: [string, Role][] = Array.from(message.guild.roles);
-
 		let allRoles: Role[] = [];
-		roleArr.forEach(r => {
-			allRoles.push(r[1]);
-		});
+		for (const [id, role] of message.guild.roles) {
+			allRoles.push(role);
+		}
 
 		i = 0;
 		while (allRoles.length > 0) {

@@ -8,14 +8,14 @@ export class EnhancedDates extends Date {
 	 * Formats the date into a readable string.
 	 * @param {number} time The UTC time, in milliseconds.
 	 */
-	public formatUTCDate(time: number): string {
+	public static formatUTCDate(time: number): string {
 		let d = new Date(time);
 		let str = `${this.addZero(d.getUTCMonth() + 1)}/${this.addZero(d.getUTCDate())}/${d.getUTCFullYear()} at ${this.addZero(d.getUTCHours())}:${this.addZero(d.getUTCMinutes())}:${this.addZero(d.getUTCSeconds())} UTC`;
 		return str;
 	}
 
 	/**Adds a zero if the number is single-digit. */
-	private addZero(num: number): string {
+	private static addZero(num: number): string {
 		return (num >= 0 && num < 10) ? "0" + num : String(num);
 	}
 }

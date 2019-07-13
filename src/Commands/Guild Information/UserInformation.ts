@@ -57,8 +57,7 @@ export default class UserInformation extends Command {
         } else {
             status = 'Offline';
         }
-        let roles = Array.from(member.roles);
-        let userRoles = "@everyone, ";
+        let userRoles = "";
 		for (let [id, roles] of member.roles) {
 			userRoles += `${roles}, `;
 		}
@@ -81,8 +80,6 @@ export default class UserInformation extends Command {
             p = "None";
 		}
 		
-		const eDate = new EnhancedDates();
-
         const userInfo = new RichEmbed()
             .setAuthor(message.author.tag, message.author.avatarURL)
             .setTitle(`User Information: ${member.user.tag}`)
@@ -94,8 +91,8 @@ export default class UserInformation extends Command {
             .addField("Nickname", nick, true)
             .addField("Roles", userRoles)
             .addField("Permission", permName)
-            .addField("Joined Server", eDate.formatUTCDate(member.joinedTimestamp), true)
-            .addField("Joined Discord", eDate.formatUTCDate(member.user.createdTimestamp), true)
+            .addField("Joined Server", EnhancedDates.formatUTCDate(member.joinedTimestamp), true)
+            .addField("Joined Discord", EnhancedDates.formatUTCDate(member.user.createdTimestamp), true)
             .addField("Default Avatar", `[Click Here](${member.user.defaultAvatarURL})`, true)
             .addField("Current Avatar", `[Click Here](${member.user.displayAvatarURL})`, true)
             .addField("Status", status, true)

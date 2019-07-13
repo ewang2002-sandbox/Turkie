@@ -38,7 +38,7 @@ export default class Log {
 		});
 
 		const date = new EnhancedDates();
-		stream.write(`${date.formatUTCDate(date.getTime())}\n    > ${errmsg}\n\n`);
+		stream.write(`${EnhancedDates.formatUTCDate(date.getTime())}\n    > ${errmsg}\n\n`);
 		stream.end();
 
 		console.error(`[ERROR] ${errmsg}`);
