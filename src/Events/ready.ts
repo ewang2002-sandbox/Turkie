@@ -42,7 +42,7 @@ module.exports.run = async (client: Client): Promise<void> => {
 	// get info
 	let app: OAuth2Application = await client.fetchApplication();
 	let owner: User = await client.fetchUser(app.owner.id);
-	console.log('\x1b[36m%s\x1b[0m', `${client.user.tag} has started on ${date.formatUTCDate(date.getTime())}.\nBOT TAG: ${client.user.tag}\nBOT ID: ${client.user.id}\nOWNER TAG: ${owner.tag}\nOWNER ID: ${owner.id}`);
+	console.log('\x1b[36m%s\x1b[0m', `${client.user.tag} has started on ${EnhancedDates.formatUTCDate(date.getTime())}.\nBOT TAG: ${client.user.tag}\nBOT ID: ${client.user.id}\nOWNER TAG: ${owner.tag}\nOWNER ID: ${owner.id}`);
 
 
 

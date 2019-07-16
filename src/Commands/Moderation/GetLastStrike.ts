@@ -53,9 +53,8 @@ export default class GetLastStrike extends Command {
 
 		if (data) {
 			const mod: GuildMember = await ModerationEnforcement.fetchMember(message, data.moderator);
-			const d: EnhancedDates = new EnhancedDates();
 			resultEmbed.addField("Current Strikes", MessageFunctions.codeBlockIt(data.strikes.toString()));
-			resultEmbed.addField("Date Issued", MessageFunctions.codeBlockIt(d.formatUTCDate(data.dateIssued)));
+			resultEmbed.addField("Date Issued", MessageFunctions.codeBlockIt(EnhancedDates.formatUTCDate(data.dateIssued)));
 			resultEmbed.addField("Moderator", mod ? mod : MessageFunctions.codeBlockIt(data.moderator));
 			resultEmbed.addField("Reason", MessageFunctions.codeBlockIt(data.reason));
 		} else {

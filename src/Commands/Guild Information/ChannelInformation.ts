@@ -25,9 +25,6 @@ export default class ChannelInformation extends Command {
 	}
 
 	public async execute(client: Client, message: Message, args: string[], guildInfo: GuildInterface): Promise<void> {
-		// get date
-		const date: EnhancedDates = new EnhancedDates();
-
 		let channel: TextChannel = message.mentions.channels.first();
 		if (!channel) {
 			if (parseInt(args[0]) < 9223372036854775807) {
@@ -45,7 +42,7 @@ export default class ChannelInformation extends Command {
 				.addField("Channel ID", `${channel.id}`, true)
 				.addField("Channel Members", channel.members.size, true)
 				.addField("NSFW", (channel.nsfw) ? "Yes" : "No", true)
-				.addField("Created On", `${date.formatUTCDate(channel.createdTimestamp)}`, true)
+				.addField("Created On", `${EnhancedDates.formatUTCDate(channel.createdTimestamp)}`, true)
 				.setTimestamp()
 				.setFooter("Turkie")
 				.setColor(Colors.randomElement());

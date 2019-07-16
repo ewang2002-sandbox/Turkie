@@ -9,7 +9,7 @@ module.exports.run = async (client: Client, guild: Guild): Promise<void> => {
 	const embed: RichEmbed = new RichEmbed()
 		.setAuthor(guild.name, guild.iconURL)
 		.setTitle("📥 New Guild Joined")
-		.setDescription(`The bot was invited at ${time.formatUTCDate(time.getTime())}.`)
+		.setDescription(`The bot was invited at ${EnhancedDates.formatUTCDate(time.getTime())}.`)
 		.addField("Member Count", guild.memberCount, true)
 		.addField("Server Owner", (`${guild.owner} ${guild.owner.id}`), true)
 		.addField("Server Channels", guild.channels.size, true)

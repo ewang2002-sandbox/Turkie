@@ -31,8 +31,7 @@ export default class CheckGhostPings extends Command {
 		for (let i = 0; i < ghostPings.length; i++) {
 			if (ghostPings[i].content.includes(message.author.id) && ghostPings[i].channel === message.channel.id) {
 				console.log("X");
-				const date: EnhancedDates = new EnhancedDates();
-				ghostPinged += `User: <@${ghostPings[i].id}>\nTime: ${date.formatUTCDate(ghostPings[i].sent)}\n\n`;
+				ghostPinged += `User: <@${ghostPings[i].id}>\nTime: ${EnhancedDates.formatUTCDate(ghostPings[i].sent)}\n\n`;
 				amount++;
 			}
 

@@ -42,11 +42,10 @@ export default class CustomCommandInfo extends Command {
 		}
 
 		if (isFound) {
-			const date: EnhancedDates = new EnhancedDates();
 			const d: RichEmbed = new RichEmbed()
 				.setAuthor(message.author.tag, message.author.avatarURL)
 				.setTitle("Custom Commands Information")
-				.setDescription(`This command was created on ${date.formatUTCDate(info.commandCreatedAt)}.`)
+				.setDescription(`This command was created on ${EnhancedDates.formatUTCDate(info.commandCreatedAt)}.`)
 				.setFooter("Custom Commands")
 				.setColor(Colors.randomElement())
 				.addField("Command Name", MessageFunctions.codeBlockIt(info.name))

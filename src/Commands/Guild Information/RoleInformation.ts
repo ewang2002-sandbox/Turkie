@@ -23,8 +23,6 @@ export default class RoleInformation extends Command {
 	}
 
 	public async execute(client: Client, message: Message, args: string[], guildInfo: GuildInterface): Promise<void> {
-		// get date
-		const date: EnhancedDates = new EnhancedDates();
 		// get role
 		let role: Role = message.mentions.roles.first();
 		if (!role) {
@@ -58,7 +56,7 @@ export default class RoleInformation extends Command {
 			.addField("Displayed (Hoisted)", (role.hoist) ? "Yes" : "No", true)
 			.addField("Bot Role", (role.managed) ? "Yes" : "No", true)
 			.addField("Role Color", `${role.hexColor} | ${role.color}`, true)
-			.addField("Created On", `${date.formatUTCDate(role.createdTimestamp)}`, true)
+			.addField("Created On", `${EnhancedDates.formatUTCDate(role.createdTimestamp)}`, true)
 			.addField("Permissions", permName.length !== 0 ? permName : "None", true)
 			.setTimestamp()
 			.setThumbnail(`https://dummyimage.com/250/${role.hexColor.slice(1)}/&text=%20`)
