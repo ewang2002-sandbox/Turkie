@@ -7,7 +7,7 @@ export default class NumberFunctions {
 	 * 
 	 * @example functions.randomInt(1, 5); // Returns (example): 4
 	 */
-	public static randomInt(min: number, max: number) {
+	public static randomInt(min: number, max: number): number {
 		min = Math.ceil(min);
 		max = Math.floor(max);
 		return Math.floor(Math.random() * (max - min + 1)) + min;

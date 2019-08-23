@@ -278,16 +278,17 @@ export class ModerationEnforcement {
 	 * @param {boolean} autoModeration Whether automoderation committed the task of adding strikes.
 	 * @param {string} [reason] The reason for the strikes.
 	 * @param {number} [strikeAmount = 1] The amount of strikes to assign. A negative value will remove the specified amount of strikes.
+	 * @param {boolean} [notifyUser = true] Whether to notify the user about the strike. 
 	 * @returns {Promise<boolean>} Whether the strikes were applied successfully. 
 	 */
-	public async strikeManagement(autoModeration: boolean, reason: string = "No reason specified", strikeAmount: number = 1): Promise<boolean> {
+	public async strikeManagement(autoModeration: boolean, reason: string = "No reason specified", strikeAmount: number = 1, notifyUser: boolean = true): Promise<boolean> {
 		const d: EnhancedDates = new EnhancedDates();
 		return new Promise((resolve, reject) => {
 			let strikeHist = this.res.moderation.moderationConfiguration.currentStrikes;
 			// if we have more than one member to punish
 			// we're going to send a log of all the users affected.
 			if (this.mem.length > 1) {
-				this.issueStrikeAlertMultiple(this.mem, strikeAmount, reason);
+				this.issueStrikeAlertMultiple(this.mem, strikeAmount, reason, notifyUser);
 			}
 			for (let i = 0; i < this.mem.length; i++) {
 				let resultantData: {
@@ -316,7 +317,7 @@ export class ModerationEnforcement {
 							}
 						}, (err, data) => {
 							if (!err) {
-								this.issueStrikeAlert(this.mem[i], strikeAmount, resultantData.strikes, autoModeration, this.mem.length > 1, true, reason);
+								this.issueStrikeAlert(this.mem[i], strikeAmount, resultantData.strikes, autoModeration, this.mem.length > 1, true, reason, notifyUser);
 								// because the person went down to 0
 								// we want to remove their profile from array not punish them
 								if (resultantData.strikes + strikeAmount <= 0) {
@@ -340,7 +341,7 @@ export class ModerationEnforcement {
 							"moderation.moderationConfiguration.currentStrikes.$.dateIssued": d.getTime()
 						}, (err, raw) => {
 							if (!err) {
-								this.issueStrikeAlert(this.mem[i], strikeAmount, resultantData.strikes, autoModeration, this.mem.length > 1, false, reason);
+								this.issueStrikeAlert(this.mem[i], strikeAmount, resultantData.strikes, autoModeration, this.mem.length > 1, false, reason, notifyUser);
 								resolve(true);
 							} else {
 								resolve(false);
@@ -364,7 +365,7 @@ export class ModerationEnforcement {
 							}
 						}, (err, raw) => {
 							if (!err) {
-								this.issueStrikeAlert(this.mem[i], strikeAmount, 0, autoModeration, this.mem.length > 1, false, reason);
+								this.issueStrikeAlert(this.mem[i], strikeAmount, 0, autoModeration, this.mem.length > 1, false, reason, notifyUser);
 								resolve(true);
 							} else {
 								resolve(false);
@@ -372,7 +373,7 @@ export class ModerationEnforcement {
 						});
 					} else {
 						// go right to punishment.
-						this.issueStrikeAlert(this.mem[i], strikeAmount, resultantData && resultantData.strikes ? resultantData.strikes : strikeAmount, autoModeration, this.mem.length > 1, true, reason);
+						this.issueStrikeAlert(this.mem[i], strikeAmount, resultantData && resultantData.strikes ? resultantData.strikes : strikeAmount, autoModeration, this.mem.length > 1, true, reason, notifyUser);
 						let punishmentSuccess: boolean = this.punishUser(this.mem[i]);
 						resolve(punishmentSuccess);
 					}
@@ -421,9 +422,18 @@ export class ModerationEnforcement {
 	 * @param {boolean} multiple Whether multiple people are involved.
 	 * @param {boolean} last Whether this strike will result in a punishment or not.
 	 * @param {string} reason The reason for the issuing of the strike.
+	 * @param {boolean} notifyUser Whether to notify the user about the strike. 
 	 */
-	private issueStrikeAlert(mem: GuildMember, strikeAmount: number, oldStr: number, autoMod: boolean, multiple: boolean, last: boolean, reason: string): void {
-		if (!last) {
+	private issueStrikeAlert(mem: GuildMember, 
+		strikeAmount: number, 
+		oldStr: number, 
+		autoMod: boolean, 
+		multiple: boolean, 
+		last: boolean, 
+		reason: string,
+		notifyUser: boolean
+	): void {
+		if (!last && notifyUser) {
 			mem.send(new RichEmbed()
 				.setAuthor(mem.user.tag, mem.user.displayAvatarURL)
 				.setTitle(`🚩 **Strike(s) ${strikeAmount > 0 ? "Issued" : "Removed"}**`)
@@ -463,8 +473,9 @@ export class ModerationEnforcement {
 	 * @param {GuildMember[]} mem The guild member that got the strike.
 	 * @param {number} strikeAmount The amount of strikes the person was issued.
 	 * @param {string} reason The reason for the issuing of the strike.
+	 * @param {boolean} notifyUser Whether to notify the user.
 	 */
-	private issueStrikeAlertMultiple(mem: GuildMember[], strikeAmount: number, reason: string): void {
+	private issueStrikeAlertMultiple(mem: GuildMember[], strikeAmount: number, reason: string, notifyUser: boolean): void {
 		const embedForSend = new RichEmbed()
 			.setAuthor(this.msg.author.tag, this.msg.author.displayAvatarURL)
 			.setTitle(`🚩 **Strike(s) ${strikeAmount > 0 ? "Issued" : "Removed"}**`)
@@ -474,7 +485,9 @@ export class ModerationEnforcement {
 			.addField("Moderator", `${this.msg.author} (${this.msg.author.tag})`)
 			.addField("Strikes", MessageFunctions.codeBlockIt(strikeAmount.toString()))
 			.setFooter("Turkie Moderation");
-		MessageFunctions.sendRichEmbed(this.msg, embedForSend);
+		if (notifyUser) {
+			MessageFunctions.sendRichEmbed(this.msg, embedForSend);
+		}
 		if (ModerationEnforcement.configuredModLogs(this.msg, this.res)) {
 			(this.msg.guild.channels.get(this.res.serverConfiguration.serverLogs.modLogs.channel) as TextChannel).send(embedForSend).catch(e => { });
 		}

@@ -9,9 +9,9 @@ export default class IssueStrikes extends Command {
 		super(client, {
 			name: "issuestrikes",
 			aliases: ["strikes", "strike", "issuestrike"],
-			description: "Issues a specific amount of strikes.",
-			usage: ["issuestrikes <@Mentions> [@Mentions...] <Amount of Strikes: NUMBER>"],
-			example: ["issuestrikes @User#0001 1", "issuestrikes @User#0001 @User#0002 3", "issuestrikes @User#0001 @User#0002 @User#9999 -1"]
+			description: "Issues a specific amount of strikes. In order for the `--ignoreKickPerm` or `--silent` flag to work properly, you must have permission to manage the server.",
+			usage: ["issuestrikes <@Mentions> [@Mentions...] <Amount of Strikes: NUMBER> [--ignoreKickPerm] [--silent]"],
+			example: ["issuestrikes @User#0001 1 --ignoreKickPerm --silent", "issuestrikes @User#0001 @User#0002 3", "issuestrikes @User#0001 @User#0002 @User#9999 -1"]
 		}, {
 			commandName: "Issue Strikes",
 			botPermissions: [],
@@ -28,6 +28,21 @@ export default class IssueStrikes extends Command {
 			MessageFunctions.sendRichEmbed(message, MessageFunctions.msgConditions(message, "NO_MENTIONS_FOUND"));
 			return;
 		}
+		
+		// check to see if we can strike ppl even though they have kick perms
+		let ignoreKick: boolean = false;
+		if (args.join(" ").includes("--ignoreKickPerm") && message.member.hasPermission("MANAGE_GUILD")) {
+			ignoreKick = true;
+		}
+		// check to see if we can strike ppl without knowledge
+		let notifyUser: boolean = true;
+		if (args.join(" ").includes("--silent") && message.member.hasPermission("MANAGE_GUILD")) {
+			notifyUser = false;
+		}
+		args = args.join(" ")
+			.replace("--ignoreKickPerms", "")
+			.replace("--silent", "")
+			.split(" ");
 
 		// strike amount
 		let strikes: number = Number.isNaN(Number.parseInt(args[args.length - 1]))
@@ -74,7 +89,7 @@ export default class IssueStrikes extends Command {
 				}
 
 				// make sure no perms
-				if (member.hasPermission("KICK_MEMBERS")) {
+				if (member.hasPermission("KICK_MEMBERS") && !ignoreKick) {
 					membersWithKickPermissions.push(member);
 					continue;
 				}
@@ -109,7 +124,7 @@ export default class IssueStrikes extends Command {
 				name: "Issued Strikes",
 				value: MessageFunctions.codeBlockIt(strikes.toString())
 			}
-		]);
+		], notifyUser ? "Notifying User" : "Silent Strike");
 
 		if (membersWithKickPermissions.length > 0
 			|| membersThatIsBot.length > 0
@@ -156,7 +171,7 @@ export default class IssueStrikes extends Command {
 				m.delete().catch(e => { });
 
 				const punishmentManager = new ModerationEnforcement(message, guildInfo, members);
-				punishmentManager.strikeManagement(false, reason, strikes);
+				punishmentManager.strikeManagement(false, reason, strikes, notifyUser);
 			});
 		});
 	}

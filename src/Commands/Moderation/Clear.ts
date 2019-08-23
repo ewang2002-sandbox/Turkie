@@ -33,7 +33,8 @@ export default class Clear extends Command {
 			return;
 		}
 
-        let amtMessages: number = Number.parseInt(messagetoDelete);
+		let amtMessages: number = Number.parseInt(messagetoDelete);
+		
         let messages: Collection<string, Message> = await message.channel.fetchMessages({
             limit: amtMessages && amtMessages <= 100 ? amtMessages : 100
         });

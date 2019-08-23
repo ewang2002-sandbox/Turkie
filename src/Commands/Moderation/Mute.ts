@@ -67,7 +67,7 @@ export default class Mute extends Command {
 		}
 
 		const me: ModerationEnforcement = new ModerationEnforcement(message, guildInfo, []);
-		me.muteUser(member, unmuteDuration ? unmuteDuration : null, reason);
+		await me.muteUser(member, unmuteDuration ? unmuteDuration : null, reason);
 
 		// modlog
 		const embed: RichEmbed = new RichEmbed()

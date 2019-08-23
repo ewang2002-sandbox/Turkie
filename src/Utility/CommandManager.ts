@@ -61,7 +61,7 @@ export class CommandManager {
 				.setAuthor(this.client.user.tag, this.client.user.displayAvatarURL)
 				.setDescription(`The command, \`${this.command}\`, was not found. Try again.`)
 				.setColor(Colors.randomElement())
-				.setFooter("⚠ Command Not Found")
+				.setFooter("⚠ Command Not Found");
 			return errNoCommandEmbed;
 		}
 

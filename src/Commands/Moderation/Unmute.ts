@@ -58,15 +58,7 @@ export default class Unmute extends Command {
 			return;
 		}
 		
-		let reason: string,
-			unmuteDuration: number;
-		if (!isNaN(parseInt(args[1]))) {
-			unmuteDuration = parseInt(args[1]);
-			reason = args.slice(2).join(' ');
-		} else {
-			unmuteDuration = null;
-			reason = args.slice(1).join(' ');
-		}
+		let reason: string = args.slice(1).join(' ');
 
 		if (!reason) {
 			reason = 'No reason provided.';

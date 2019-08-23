@@ -10,12 +10,13 @@ export default class MessageFunctions {
 	 * @param {string} title The title for the embed.
 	 * @param {string} desc The description for the embed.
 	 * @param {EmbedField[]} [fields] The fields for the embed.
+	 * @param {string} [footer] The footer for the field.
 	 * @param {string} [image] The image.
 	 * @param {string} [thumbnail] The thumbnail.
 	 * @returns {RichEmbed} The RichEmbed.
 	 * @static
 	 */
-	public static createMsgEmbed(message: Message, title: string, desc: string, fields: EmbedField[] = [], image?: string, thumbnail?: string): RichEmbed {
+	public static createMsgEmbed(message: Message, title: string, desc: string, fields: EmbedField[] = [], footer?: string, image?: string, thumbnail?: string): RichEmbed {
 		const embed = new RichEmbed()
 			.setAuthor(message.author.tag, message.author.displayAvatarURL)
 			.setTitle(title)
@@ -30,6 +31,9 @@ export default class MessageFunctions {
 		}
 		if (thumbnail && thumbnail.match(/\.(jpeg|jpg|gif|png)$/) !== null) {
 			embed.setThumbnail(thumbnail);
+		}
+		if (footer) {
+			embed.setFooter(footer);
 		}
 		return embed;
 	}
