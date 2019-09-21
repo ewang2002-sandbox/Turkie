@@ -6,6 +6,7 @@ import { OtherUtilities } from "../../Utility/OtherUtilities";
 import { ModerationEnforcement } from "../../Handlers/ModerationEnforcement";
 import { Colors } from "../../Configuration/Configuration";
 import { EnhancedDates } from "../../Utility/EnhancedDates";
+import { getUserFromMention } from "../../Handlers/Util";
 
 export default class GetLastStrike extends Command {
 	public constructor(client: Client) {
@@ -28,7 +29,7 @@ export default class GetLastStrike extends Command {
 	public async execute(client: Client, message: Message, args: string[], guildInfo: GuildInterface): Promise<void> {
 		let member: GuildMember;
 		if (message.mentions.users.size > 0) {
-			member = await ModerationEnforcement.fetchMember(message, message.mentions.users.first().id);
+			member = await ModerationEnforcement.fetchMember(message, getUserFromMention(client, args[0]).id);
 		} else {
 			if (OtherUtilities.checkSnowflake(args[0]) && message.guild.members.has(args[0])) {
 				member = await ModerationEnforcement.fetchMember(message, args[0]);

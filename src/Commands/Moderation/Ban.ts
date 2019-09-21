@@ -5,6 +5,7 @@ import { ModerationEnforcement } from "../../Handlers/ModerationEnforcement";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { OtherUtilities } from "../../Utility/OtherUtilities";
 import { Colors } from "../../Configuration/Configuration";
+import { getUserFromMention } from "../../Handlers/Util";
 
 export default class Ban extends Command {
 	public constructor(client: Client) {
@@ -28,7 +29,7 @@ export default class Ban extends Command {
 		let member: GuildMember | string;
 		// get users
 		if (message.mentions.users.size > 0) {
-			let userMention: User = message.mentions.users.first();
+			let userMention: User = getUserFromMention(client, args[0])
 			member = await ModerationEnforcement.fetchMember(message, userMention.id);
 		} else {
 			if (OtherUtilities.checkSnowflake(args[0])) {

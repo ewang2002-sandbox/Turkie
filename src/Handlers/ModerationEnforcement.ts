@@ -44,7 +44,7 @@ export class ModerationEnforcement {
 		}
 		// lock channel down
 		this.tempLockChannel(this.msg.channel as TextChannel);
-		
+
 		let resultant = await this.strikeManagement(true, "Sent bad words in a channel.");
 		return resultant;
 	}
@@ -110,6 +110,9 @@ export class ModerationEnforcement {
 			mutedRole = muro;
 		}
 
+		// add the muted role.
+		await member.addRole(mutedRole);
+
 		const permissionObject: PermissionObject = {
 			SEND_MESSAGES: false, // can't send msgs, obviously.
 			ADD_REACTIONS: false, // can't add reactions.
@@ -119,8 +122,8 @@ export class ModerationEnforcement {
 		};
 
 		// loop through each channel. Basically make sure every channel has the muted role.
-		for (let channel of this.msg.guild.channels) {
-			let gChan: GuildChannel = channel[1];
+		for (let [id, chan] of this.msg.guild.channels) {
+			let gChan: GuildChannel = chan;
 			if (!gChan.permissionOverwrites.get(mutedRole.id)) {
 				await gChan.overwritePermissions(mutedRole, permissionObject, reason).catch(e => { });
 			}
@@ -134,9 +137,6 @@ export class ModerationEnforcement {
 				}
 			}, duration * 60000);
 		}
-
-		// add the muted role.
-		await member.addRole(mutedRole);
 
 		// update the guild object if needed.
 		if (this.res.moderation.moderationConfiguration.mutedRole !== mutedRole.id) {
@@ -424,12 +424,12 @@ export class ModerationEnforcement {
 	 * @param {string} reason The reason for the issuing of the strike.
 	 * @param {boolean} notifyUser Whether to notify the user about the strike. 
 	 */
-	private issueStrikeAlert(mem: GuildMember, 
-		strikeAmount: number, 
-		oldStr: number, 
-		autoMod: boolean, 
-		multiple: boolean, 
-		last: boolean, 
+	private issueStrikeAlert(mem: GuildMember,
+		strikeAmount: number,
+		oldStr: number,
+		autoMod: boolean,
+		multiple: boolean,
+		last: boolean,
 		reason: string,
 		notifyUser: boolean
 	): void {
