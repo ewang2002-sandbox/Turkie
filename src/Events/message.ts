@@ -6,10 +6,12 @@ import { AutoModHandler } from "../Handlers/AutoModHandler";
 import { CommandHandler } from "../Handlers/CommandHandler";
 
 module.exports.run = async (client: Client, message: Message): Promise<void> => {
+	// no bot
 	if (message.author.bot) {
 		return;
 	}
 
+	// no webhooks allowed.
 	if (message.webhookID || message.type === "GUILD_MEMBER_JOIN") {
 		return;
 	}
