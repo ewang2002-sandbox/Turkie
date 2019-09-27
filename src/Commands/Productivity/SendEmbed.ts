@@ -295,7 +295,7 @@ export default class SendEmbed extends Command {
 						embed.setImage(message.author.displayAvatarURL);
 					} else {
 						if (this.checkURL(resp)) {
-							embed.setThumbnail(resp);
+							embed.setImage(resp);
 						} else {
 							await msg.edit(this.editEmbedWithLimit(this.introEmbed, embed)).catch(e => { });
 							isChanging = false;
