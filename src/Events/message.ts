@@ -24,7 +24,7 @@ module.exports.run = async (client: Client, message: Message): Promise<void> => 
 		TurkieBotGuild.findOne({ guildID: message.guild.id }, async (err: any, res: GuildInterface) => {
 			if (!res) {
 				const newInformation: MongoDB.MongoDBGuildHandler = new MongoDB.MongoDBGuildHandler(message.guild.id);
-				await newInformation.createGuildData();
+				await newInformation.createData();
 			}
 
 			if (res.serverConfiguration.deletePinNotifications && message.type === "PINS_ADD") {

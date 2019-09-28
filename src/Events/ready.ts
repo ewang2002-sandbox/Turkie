@@ -62,7 +62,7 @@ module.exports.run = async (client: Client): Promise<void> => {
 			}
 			if (!data) {
 				const g = new MongoDB.MongoDBGuildHandler(guildid);
-				g.createGuildData();
+				g.createData();
 			}
 		});
 	}
@@ -71,7 +71,7 @@ module.exports.run = async (client: Client): Promise<void> => {
 	TurkieBotGuild.find({}, (err, data: GuildInterface) => {
 		if (!guildBots.includes(data.guildID)) {
 			const g = new MongoDB.MongoDBGuildHandler(data.guildID);
-			g.deleteGuildData();
+			g.deleteData();
 		}
 	});
 }

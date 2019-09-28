@@ -95,7 +95,15 @@ export interface GuildInterface extends Document {
 				isEnabled: boolean;
 				channel: string;
 			};
-		}
+		};
+		modMail: {
+			isEnabled: boolean;
+			category: string;
+			activeSessions: Array<{
+				userId: string;
+				chanID: string; 
+			}>;
+		};
 	}
 }
 
@@ -172,6 +180,11 @@ export const GuildSchema = new Schema({
 				isEnabled: Boolean,
 				channel: String,
 			}
+		},
+		modMail: {
+			isEnabled: Boolean,
+			category: String,
+			activeSessions: []
 		}
 	}
 });

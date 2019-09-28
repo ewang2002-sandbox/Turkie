@@ -4,6 +4,7 @@ import { MongoError } from "mongodb";
 import TurkieBotGuild, { GuildInterface } from "../Models/TurkieBotGuild";
 import { RichEmbed, Message } from "discord.js";
 import MessageFunctions from "../Utility/MessageFunctions";
+import TurkieBotUser, { UserInterface } from "../Models/TurkieBotUser";
 
 /**
  * MongoDB Handler
@@ -11,11 +12,11 @@ import MessageFunctions from "../Utility/MessageFunctions";
 export namespace MongoDB {
 	export class MongoDBHandler {
 		private dbPath: string;
-	
+
 		public constructor(dbPath: string) {
 			this.dbPath = dbPath;
 		}
-	
+
 		/**
 		 * Connects to the database.
 		 */
@@ -27,31 +28,59 @@ export namespace MongoDB {
 			});
 		}
 	}
-	
+
+	abstract class MongoDBBase {
+		/**
+		 * Checks to see if the data exists; if not, 
+		 * creates a new data object.
+		 * @returns {Promise<boolean>} If the data was found or was created.
+		 */
+		public abstract async createData(): Promise<boolean>;
+
+		/**
+		 * Deletes the data if it exists.
+		 * @returns {Promise<boolean>} If the data was deleted.
+		 */
+		public abstract async deleteData(): Promise<boolean>;
+
+		/**
+		 * Sends the error message stating that the bot could not save the data.
+		 * @param {Message} message The message. 
+		 * @returns {void}
+		 */
+		public static sendErrorEmbed(message: Message): void {
+			const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Database Error", "The bot was unable to save your data. Please try again later.");
+			message.channel.send(embed)
+				.then(msg => {
+					msg = msg as Message;
+					msg.delete(5000);
+				})
+				.catch(e => { });
+			return;
+		}
+	}
+
 	/**
 	 * The MongoDB guild handler.
 	 */
-	export class MongoDBGuildHandler {
+	export class MongoDBGuildHandler extends MongoDBBase {
+		/**
+		 * The guild ID.
+		 */
 		private guildID: string;
-	
+
 		/**
 		 * The constructor.
 		 * @param {string} guildID The guild ID. 
 		 */
 		public constructor(guildID: string) {
+			super();
 			this.guildID = guildID;
 		}
-	
-		/**
-		 * Checks to see if the data exists; if not, 
-		 * creates a new guild data object.
-		 * @returns {Promise<boolean>} If the data was found or was created.
-		 */
-		public async createGuildData(): Promise<boolean> {
+
+		public async createData(): Promise<boolean> {
 			return new Promise((resolve, reject) => {
-				TurkieBotGuild.findOne({
-					guildID: this.guildID
-				}, (err: MongoError, data: GuildInterface) => {
+				TurkieBotGuild.findOne({ guildID: this.guildID }, (err: any, data: GuildInterface) => {
 					if (err) {
 						return resolve(false);
 					}
@@ -129,6 +158,11 @@ export namespace MongoDB {
 										isEnabled: false,
 										channel: "",
 									}
+								},
+								modMail: {
+									isEnabled: false,
+									category: "",
+									activeSessions: []
 								}
 							}
 						});
@@ -140,12 +174,8 @@ export namespace MongoDB {
 				});
 			});
 		}
-	
-		/**
-		 * Deletes the guild data if it exists.
-		 * @returns {Promise<boolean>} If the data was deleted.
-		 */
-		public async deleteGuildData(): Promise<boolean> {
+
+		public async deleteData(): Promise<boolean> {
 			return new Promise((resolve, reject) => {
 				TurkieBotGuild.deleteOne({
 					guildID: this.guildID
@@ -158,21 +188,54 @@ export namespace MongoDB {
 				});
 			});
 		}
+	}
+
+	export class MongoDBUserHandler extends MongoDBBase {
+		/**
+		 * The user ID.
+		 */
+		private userID: string;
 
 		/**
-		 * Sends the error message stating that the bot could not save the data.
-		 * @param {Message} message The message. 
-		 * @returns {void}
+		 * Constructor.
+		 * @param {string} userID The user ID.
 		 */
-		public static sendErrorEmbed(message: Message): void {
-			const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Database Error", "The bot was unable to save your data. Please try again later.");
-			message.channel.send(embed)
-				.then(msg => {
-					msg = msg as Message;
-					msg.delete(5000);
-				})
-				.catch(e => { });
-			return;
+		public constructor(userID: string) {
+			super();
+			this.userID = userID;
+		}
+
+		public async createData(): Promise<boolean> {
+			return new Promise((resolve, reject) => {
+				TurkieBotUser.findOne({ userID: this.userID }, (err: any, data: UserInterface) => {
+					if (err) {
+						return resolve(false);
+					} 
+					if (!data) {
+						const newData = new TurkieBotUser({
+							_id: mongoose.Types.ObjectId(),
+							userID: this.userID,
+							punishmentLogs: []
+						});
+						newData.save().catch(e => {
+							return resolve(false);
+						});
+					}
+					resolve(true);
+				});
+			});
+		}
+
+		public async deleteData(): Promise<boolean> {
+			return new Promise((resolve, reject) => {
+				TurkieBotUser.deleteOne({ userID: this.userID }, (err) => {
+					if (err) {
+						resolve(false);
+					} else {
+						resolve(true);
+					}
+				});
+			});
 		}
 	}
 }

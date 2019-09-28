@@ -20,5 +20,5 @@ module.exports.run = async (client: Client, guild: Guild): Promise<void> => {
 	}
 
 	const mdHandler = new MongoDB.MongoDBGuildHandler(guild.id);
-	mdHandler.createGuildData();
+	mdHandler.createData();
 }
