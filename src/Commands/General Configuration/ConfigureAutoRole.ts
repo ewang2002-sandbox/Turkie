@@ -8,7 +8,7 @@ export default class ConfigureAutoRole extends Command {
 	public constructor(client: Client) {
 		super(client, {
 			name: "configwelcomerole",
-			aliases: ["welcomerole", "configautorole", "autorole", "autoroles", "welcomeroles"],
+			aliases: ["welcomerole", "configautorole", "autorole", "autoroles", "welcomeroles", "configureautorole", "configurewelcomerole"],
 			description: "Enables or disables autorole; if enabled, the bot will give new members up to 5 roles.",
 			usage: ["configwelcomerole <Role Mention | ID>"],
 			example: ["configwelcomerole 493282293499297812"]

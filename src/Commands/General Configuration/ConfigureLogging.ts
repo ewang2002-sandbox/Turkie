@@ -8,7 +8,7 @@ export default class ConfigLogging extends Command {
 	public constructor(client: Client) {
 		super(client, {
 			name: "configlogging",
-			aliases: ["logging"],
+			aliases: ["logging", "configurelogging"],
 			description: "Configures logging for the server.",
 			usage: ["configlogging <Log Type: joinleave | moderation>", "configlogging <Log Type: joinleave | moderation> <Channel: #MENTION>"],
 			example: []

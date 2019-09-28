@@ -8,7 +8,7 @@ export default class ConfigExemptRole extends Command {
 	public constructor(client: Client) {
 		super(client, {
 			name: "configexemptrole",
-			aliases: ["exemptrole"],
+			aliases: ["exemptrole", "configureexemptrole"],
 			description: "Adds or removes an exempt role. If a user has an exempt role, he or she will not be punished by automoderation.",
 			usage: ["configexemptrole <Role Mention | ID>"],
 			example: ["configexemptrole @Exempt"]

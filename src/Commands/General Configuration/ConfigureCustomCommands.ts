@@ -8,7 +8,7 @@ export default class ConfigureCustomCommands extends Command {
 	public constructor(client: Client) {
 		super(client, {
 			name: "configcustomcommands",
-			aliases: ["customcommands"],
+			aliases: ["customcommands", "configurecustomcommands"],
 			description: "Enables or disables custom commands.",
 			usage: ["configcustomcommands"],
 			example: []
