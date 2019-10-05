@@ -45,8 +45,7 @@ export class ModerationEnforcement {
 		// lock channel down
 		this.tempLockChannel(this.msg.channel as TextChannel);
 
-		let resultant = await this.strikeManagement(true, "Sent bad words in a channel.");
-		return resultant;
+		return await this.strikeManagement(true, "Sent bad words in a channel.");
 	}
 
 	/**
@@ -59,8 +58,7 @@ export class ModerationEnforcement {
 		// lock channel down
 		this.tempLockChannel(this.msg.channel as TextChannel);
 
-		let resultant = await this.strikeManagement(true, "Sent an invite link to a channel.");
-		return resultant;
+		return await this.strikeManagement(true, "Sent an invite link to a channel.");
 	}
 
 	/**
@@ -74,8 +72,7 @@ export class ModerationEnforcement {
 		// lock channel down
 		this.tempLockChannel(this.msg.channel as TextChannel);
 
-		let resultant = await this.strikeManagement(true, "Spam mentioned.");
-		return resultant;
+		return await this.strikeManagement(true, "Spam mentioned.");
 	}
 
 	/**
@@ -89,8 +86,7 @@ export class ModerationEnforcement {
 		// lock channel down
 		this.tempLockChannel(this.msg.channel as TextChannel);
 
-		let resultant = await this.strikeManagement(true, "Spamming in chat.");
-		return resultant;
+		return await this.strikeManagement(true, "Spamming in chat.");
 	}
 
 	/**
@@ -111,7 +107,7 @@ export class ModerationEnforcement {
 		}
 
 		// add the muted role.
-		await member.addRole(mutedRole);
+		await member.addRole(mutedRole).catch(e => { });
 
 		const permissionObject: PermissionObject = {
 			SEND_MESSAGES: false, // can't send msgs, obviously.
@@ -152,7 +148,7 @@ export class ModerationEnforcement {
 	 * @param {string} [reason] The reason, if any. 
 	 * @returns {boolean} Whether the member was unmuted successfully.
 	 */
-	public unmuteUser(member: GuildMember, reason: string = "No reason provided."): boolean {
+	public async unmuteUser(member: GuildMember, reason: string = "No reason provided."): Promise<boolean> {
 		let mutedRole: Role = this.msg.guild.roles.get(this.res.moderation.moderationConfiguration.mutedRole);
 
 		// check to see if role exists.
@@ -166,7 +162,7 @@ export class ModerationEnforcement {
 		}
 
 		// unmute.
-		member.removeRole(mutedRole, reason);
+		await member.removeRole(mutedRole, reason);
 		return true;
 	}
 

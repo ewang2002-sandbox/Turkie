@@ -62,9 +62,9 @@ export namespace AutoModHandler {
 			message.mentions.roles.size >= data.moderation.antiMention.theshold ||
 			message.mentions.roles.size + message.mentions.users.size >= data.moderation.antiMention.theshold) {
 			return true;
-		} else {
-			return false;
 		}
+
+		return false;
 	}
 
 	/**
@@ -122,10 +122,8 @@ function getPossInvLinks(linksToCheck: RegExpMatchArray, message: Message): Prom
 				const resultUrl = response.request.uri.href;
 				if (discordInvite.test(resultUrl)) {
 					const invite: Invite | void = await message.client.fetchInvite(resultUrl).catch(e => { });
-					if (invite) {
-						if (invite.guild.id !== message.guild.id) {
-							return resolve([link, resultUrl]);
-						}
+					if (invite && invite.guild.id !== message.guild.id) {
+						return resolve([link, resultUrl]);
 					}
 				}
 			});

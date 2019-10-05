@@ -6,9 +6,7 @@ import MessageFunctions from "../Utility/MessageFunctions";
 module.exports.run = async (client: Client, guild: Guild, user: User): Promise<void> => {
 	TurkieBotGuild.findOne({ guildID: guild.id }, async (err: any, data: GuildInterface) => {
 		if (data.serverConfiguration.serverLogs.modLogs.isEnabled) {
-			guild.fetchAuditLogs({
-				limit: 5
-			}).then(logs => {
+			guild.fetchAuditLogs({ limit: 5 }).then(logs => {
 				let action = logs.entries.array()[0];
 				
 				if (action.executor.id === client.user.id) {
