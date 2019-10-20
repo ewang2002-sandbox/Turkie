@@ -22,7 +22,7 @@ export default class BotPing extends Command {
 			argsLength: 0,
 			guildOnly: false,
 			botOwnerOnly: false
-		})
+		});
 	}
 
 	public async execute(client: Client, message: Message, args: string[], guildInfo: GuildInterface): Promise<void> {

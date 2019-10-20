@@ -49,7 +49,7 @@ The format is first & last name, Github tag, and their roles.
 - Marcella - Name of the bot.
 
 # Contributions
-If you would like to contribute to this bot, please head over [here](https://github.com/ewang20027/Turkie/blob/master/CONTRIBUTING.md).
+If you would like to contribute to this bot, just submit a pull request! 
 Have an issue? Please head over to the Issues tab. 
 
 Thank you for taking the time to contribute. It means a lot. 
