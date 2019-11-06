@@ -1,4 +1,4 @@
-import { Message, GuildMember, Role, GuildChannel, PermissionObject, RichEmbed, TextChannel } from "discord.js";
+import { Message, GuildMember, Role, GuildChannel, PermissionObject, MessageEmbed, TextChannel, Permissions } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../Models/TurkieBotGuild";
 import { Colors } from "../Configuration/Configuration";
 import NumberFunctions from "../Utility/NumberFunctions";
@@ -100,16 +100,18 @@ export class ModerationEnforcement {
 		// first, get the role.
 		let mutedRole: Role = this.msg.guild.roles.get(this.res.moderation.moderationConfiguration.mutedRole);
 		if (!mutedRole) {
-			let muro = await this.msg.guild.createRole({
-				name: 'Muted',
+			let muro = await this.msg.guild.roles.create({
+				data: {
+					name: "Muted"
+				}
 			});
 			mutedRole = muro;
 		}
 
 		// add the muted role.
-		await member.addRole(mutedRole).catch(e => { });
+		await member.roles.add(mutedRole).catch(e => { });
 
-		const permissionObject: PermissionObject = {
+		const permissionObject = {
 			SEND_MESSAGES: false, // can't send msgs, obviously.
 			ADD_REACTIONS: false, // can't add reactions.
 			CONNECT: false, // can't connect to vc.
@@ -121,7 +123,7 @@ export class ModerationEnforcement {
 		for (let [id, chan] of this.msg.guild.channels) {
 			let gChan: GuildChannel = chan;
 			if (!gChan.permissionOverwrites.get(mutedRole.id)) {
-				await gChan.overwritePermissions(mutedRole, permissionObject, reason).catch(e => { });
+				await gChan.createOverwrite(mutedRole, permissionObject, reason).catch(e => { });
 			}
 		}
 
@@ -162,7 +164,7 @@ export class ModerationEnforcement {
 		}
 
 		// unmute.
-		await member.removeRole(mutedRole, reason);
+		await member.roles.remove(mutedRole, reason);
 		return true;
 	}
 
@@ -181,8 +183,8 @@ export class ModerationEnforcement {
 				return resolve(false);
 			}
 
-			await gMember.send(new RichEmbed()
-				.setAuthor(this.msg.client.user.tag, this.msg.client.user.displayAvatarURL)
+			await gMember.send(new MessageEmbed()
+				.setAuthor(this.msg.client.user.tag, this.msg.client.user.avatarURL({ format: "png" }))
 				.setTitle("👢 **Kicked**")
 				.setDescription(`You have been kicked from **${this.msg.guild.name}**.`)
 				.addField("**Moderator**", `${this.msg.client.user} (${this.msg.client.user.id})`)
@@ -193,8 +195,8 @@ export class ModerationEnforcement {
 			await gMember.kick(reason);
 			// mod log it
 			if (ModerationEnforcement.configuredModLogs(this.msg, this.res)) {
-				const embed: RichEmbed = new RichEmbed()
-					.setAuthor(this.msg.client.user.tag, this.msg.client.user.displayAvatarURL)
+				const embed: MessageEmbed = new MessageEmbed()
+					.setAuthor(this.msg.client.user.tag, this.msg.client.user.avatarURL({ format: "png" }))
 					.setTitle("👢 **AutoMod Kick**")
 					.setDescription("A member has been kicked from the server for activating automoderation.")
 					.addField("Moderator", `${this.msg.client.user} (${this.msg.client.user.id})`)
@@ -223,8 +225,8 @@ export class ModerationEnforcement {
 				return resolve(false);
 			}
 
-			await gMember.send(new RichEmbed()
-				.setAuthor(this.msg.client.user.tag, this.msg.client.user.displayAvatarURL)
+			await gMember.send(new MessageEmbed()
+				.setAuthor(this.msg.client.user.tag, this.msg.client.user.avatarURL({ format: "png" }))
 				.setTitle("🔨 **Banned**")
 				.setDescription(`You have been banned from **${this.msg.guild.name}**.`)
 				.addField("**Moderator**", `${this.msg.client.user} (${this.msg.client.user.id})`)
@@ -232,11 +234,11 @@ export class ModerationEnforcement {
 				.setColor(Colors.randomElement())
 				.setTimestamp());
 
-			await gMember.ban(reason);
+			await gMember.ban({ reason: reason });
 			// mod log it
 			if (ModerationEnforcement.configuredModLogs(this.msg, this.res)) {
-				const embed: RichEmbed = new RichEmbed()
-					.setAuthor(this.msg.client.user.tag, this.msg.client.user.displayAvatarURL)
+				const embed: MessageEmbed = new MessageEmbed()
+					.setAuthor(this.msg.client.user.tag, this.msg.client.user.avatarURL({ format: "png" }))
 					.setTitle("🔨 **AutoMod Ban**")
 					.setDescription("A member has been banned for from server for activating automoderation.")
 					.addField("Moderator", `${this.msg.client.user} (${this.msg.client.user.id})`)
@@ -260,8 +262,8 @@ export class ModerationEnforcement {
 	 */
 	public static async fetchMember(message: Message, id: string): Promise<GuildMember> {
 		return new Promise((resolve, reject) => {
-			message.client.fetchUser(id).then(async user => {
-				message.guild.fetchMember(user.id).then(async member => {
+			message.client.users.fetch(id).then(async user => {
+				message.guild.members.fetch(user.id).then(async member => {
 					return resolve(member);
 				});
 			});
@@ -430,8 +432,8 @@ export class ModerationEnforcement {
 		notifyUser: boolean
 	): void {
 		if (!last && notifyUser) {
-			mem.send(new RichEmbed()
-				.setAuthor(mem.user.tag, mem.user.displayAvatarURL)
+			mem.send(new MessageEmbed()
+				.setAuthor(mem.user.tag, mem.user.avatarURL({ format: "png" }))
 				.setTitle(`🚩 **Strike(s) ${strikeAmount > 0 ? "Issued" : "Removed"}**`)
 				.setColor(Colors.randomElement())
 				.setDescription(`${strikeAmount > 0 ? `You have received \`${strikeAmount}\` strike(s) in \`${this.msg.guild.name}\`.` : `A moderator has removed \`${Math.abs(strikeAmount)}\` strike(s) from your profile in \`${this.msg.guild.name}\`.`}`)
@@ -442,8 +444,8 @@ export class ModerationEnforcement {
 		}
 
 		// make new embed for logging purposes
-		const embedForSend = new RichEmbed()
-			.setAuthor(this.msg.author.tag, this.msg.author.displayAvatarURL)
+		const embedForSend = new MessageEmbed()
+			.setAuthor(this.msg.author.tag, this.msg.author.avatarURL({ format: "png" }))
 			.setTitle(`🚩 **${Math.abs(strikeAmount)} Strike(s) ${strikeAmount > 0 ? "Issued" : "Removed"}**`)
 			.setColor(Colors.randomElement())
 			.setDescription(`Reason: ${reason}`)
@@ -472,8 +474,8 @@ export class ModerationEnforcement {
 	 * @param {boolean} notifyUser Whether to notify the user.
 	 */
 	private issueStrikeAlertMultiple(mem: GuildMember[], strikeAmount: number, reason: string, notifyUser: boolean): void {
-		const embedForSend = new RichEmbed()
-			.setAuthor(this.msg.author.tag, this.msg.author.displayAvatarURL)
+		const embedForSend = new MessageEmbed()
+			.setAuthor(this.msg.author.tag, this.msg.author.avatarURL({ format: "png" }))
 			.setTitle(`🚩 **Strike(s) ${strikeAmount > 0 ? "Issued" : "Removed"}**`)
 			.setColor(Colors.randomElement())
 			.setDescription(`Reason: ${reason}`)
@@ -502,11 +504,11 @@ export class ModerationEnforcement {
 	 * @param {TextChannel} chan The channel to lock down. 
 	 */
 	private tempLockChannel(chan: TextChannel): void {
-		chan.overwritePermissions(this.mem[0], {
+		chan.createOverwrite(this.mem[0], {
 			SEND_MESSAGES: false
 		}).then(async () => {
 			setTimeout(() => {
-				chan.overwritePermissions(this.mem[0], {
+				chan.createOverwrite(this.mem[0], {
 					SEND_MESSAGES: true
 				})
 			}, 5000);

@@ -1,4 +1,4 @@
-import { RichEmbed, Message } from "discord.js";
+import { Message, MessageEmbed } from "discord.js";
 import { Colors } from "../Configuration/Configuration";
 
 type Tag = "INVALID_NUMBER_INPUT" | "INVALID_CHOICE_INPUT" | "INVALID_INVITE_INPUT" | "NO_MENTIONS_FOUND" | "NO_CHANNELS_FOUND" | "NO_CHAN_PERMISSIONS" | "NO_NEGATIVE_NUMBER" | "NO_ZERO_NUMBER" | "INVALID_ID" | "NO_USERS_FOUND" | "NOT_IN_VC" | "MSG_TOO_LONG" | "NOT_ENABLED" | "NO_ROLE_FOUND";
@@ -13,12 +13,12 @@ export default class MessageFunctions {
 	 * @param {string} [footer] The footer for the field.
 	 * @param {string} [image] The image.
 	 * @param {string} [thumbnail] The thumbnail.
-	 * @returns {RichEmbed} The RichEmbed.
+	 * @returns {MessageEmbed} The MessageEmbed.
 	 * @static
 	 */
-	public static createMsgEmbed(message: Message, title: string, desc: string, fields: EmbedField[] = [], footer?: string, image?: string, thumbnail?: string): RichEmbed {
-		const embed = new RichEmbed()
-			.setAuthor(message.author.tag, message.author.displayAvatarURL)
+	public static createMsgEmbed(message: Message, title: string, desc: string, fields: EmbedField[] = [], footer?: string, image?: string, thumbnail?: string): MessageEmbed {
+		const embed = new MessageEmbed()
+			.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 			.setTitle(title)
 			.setDescription(desc)
 			.setColor(Colors.randomElement())
@@ -43,12 +43,12 @@ export default class MessageFunctions {
 	 * @param {Message} message The message.
 	 * @param {string} tag The tag to look for.
 	 * @param {string[]} [misc] Any extra arguments.
-	 * @returns {RichEmbed}
+	 * @returns {MessageEmbed}
 	 * @static
 	 */
-	public static msgConditions(message: Message, tag: Tag, ...misc: string[]): RichEmbed {
-		const embed: RichEmbed = new RichEmbed()
-			.setAuthor(message.author.tag, message.author.displayAvatarURL)
+	public static msgConditions(message: Message, tag: Tag, ...misc: string[]): MessageEmbed {
+		const embed: MessageEmbed = new MessageEmbed()
+			.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 			.setColor(Colors.randomElement())
 			.setTimestamp();
 
@@ -132,17 +132,17 @@ export default class MessageFunctions {
 	/**
 	 * Sends a message with a deletion time. 5 seconds is default.
 	 * @param {Message} message The message.
-	 * @param {RichEmbed} re The embed to send.
+	 * @param {MessageEmbed} re The embed to send.
 	 * @param {number} [deleteIn] The amount of time to delete the message in ms.
 	 * @returns {Promise<Message>}
 	 * @static
 	 */
-	public static async sendRichEmbed(message: Message, re: RichEmbed, deleteIn: number = 5000): Promise<Message> {
+	public static async sendRichEmbed(message: Message, re: MessageEmbed, deleteIn: number = 5000): Promise<Message> {
 		return new Promise((resolve, reject) => {
 			message.channel.send(re)
 				.then((msg) => {
 					msg = msg as Message;
-					msg.delete(deleteIn);
+					msg.delete({ timeout: deleteIn });
 					resolve(msg);
 				}).catch(e => { });
 		});

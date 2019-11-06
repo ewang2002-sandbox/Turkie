@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed, MessageReaction, User, ReactionCollector, MessageCollector, Channel, TextChannel, MessageEmbed } from "discord.js";
+import { Client, Message, MessageReaction, User, ReactionCollector, MessageCollector, Channel, TextChannel, MessageEmbed } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { Colors } from "../../Configuration/Configuration";
@@ -7,7 +7,7 @@ import { Colors } from "../../Configuration/Configuration";
 export default class SendEmbed extends Command {
 	private readonly maximumFields = 25;
 	private readonly maximumCharacters = 6000;
-	private readonly introEmbed = new RichEmbed()
+	private readonly introEmbed = new MessageEmbed()
 		.setTitle("🛠 **Creating Your Embed**")
 		.setDescription("Your embed preview is above.\n\nReact With ✏ to customize the title.\nReact With 📝 to customize the description\nReact With 🙍 to customize the author.\nReact With 📎 to add or remove embed fields.\nReact With 📕 to customize the footer.\nReact With 🖌 to customize the thumbnail.\nReact With 📷 to customize the image.\nReact with 🌈 to edit the embed color.\nReact With 💾 to send this embed.\nReact With ❌ to cancel the embed-making process.")
 		.setFooter("Turkie: Creating Embed Message")
@@ -45,7 +45,7 @@ export default class SendEmbed extends Command {
 			}
 
 			try {
-				rMessage = await (rChannel as TextChannel).fetchMessage(args[1]);
+				rMessage = await (rChannel as TextChannel).messages.fetch(args[1]);
 				if (rMessage.embeds.length === 0) {
 					MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "No Embed Found", "The message ID must have an embed."));
 					return;
@@ -63,11 +63,11 @@ export default class SendEmbed extends Command {
 
 
 		let isChanging = false;
-		let embed: RichEmbed;
+		let embed: MessageEmbed;
 		if (rMessage && rMessage.embeds.length > 0) {
-			embed = new RichEmbed(rMessage.embeds[0]);
+			embed = new MessageEmbed(rMessage.embeds[0]);
 		} else {
-			embed = new RichEmbed();
+			embed = new MessageEmbed();
 		}
 		
 		let fields: number = 0;
@@ -106,7 +106,7 @@ export default class SendEmbed extends Command {
 			});
 
 			interact.on("collect", async r => {
-				r.remove(message.author.id).catch(e => { });
+				r.users.remove(message.author.id).catch(e => { });
 				if (isChanging) {
 					return;
 				}
@@ -158,11 +158,11 @@ export default class SendEmbed extends Command {
 					}
 
 					if (resp === "nick") {
-						embed.setAuthor(message.member.displayName, message.author.displayAvatarURL);
+						embed.setAuthor(message.member.displayName, message.author.avatarURL({ format: "png" }));
 					} else if (resp === "tag") {
-						embed.setAuthor(message.author.tag, message.author.displayAvatarURL);
+						embed.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }));
 					} else if (resp === "server") {
-						embed.setAuthor(message.guild.name, message.guild.iconURL);
+						embed.setAuthor(message.guild.name, message.guild.iconURL({ format: "png" }));
 					} else {
 						embed.setAuthor(resp);
 					}
@@ -268,9 +268,9 @@ export default class SendEmbed extends Command {
 					}
 
 					if (resp === "guild") {
-						embed.setThumbnail(message.guild.iconURL);
+						embed.setThumbnail(message.guild.iconURL({ format: "png" }));
 					} else if (resp === "me") {
-						embed.setThumbnail(message.author.displayAvatarURL);
+						embed.setThumbnail(message.author.avatarURL({ format: "png" }));
 					} else {
 						if (this.checkURL(resp)) {
 							embed.setThumbnail(resp);
@@ -290,9 +290,9 @@ export default class SendEmbed extends Command {
 					}
 
 					if (resp === "guild") {
-						embed.setImage(message.guild.iconURL);
+						embed.setImage(message.guild.iconURL({ format: "png" }));
 					} else if (resp === "me") {
-						embed.setImage(message.author.displayAvatarURL);
+						embed.setImage(message.author.avatarURL({ format: "png" }));
 					} else {
 						if (this.checkURL(resp)) {
 							embed.setImage(resp);
@@ -328,12 +328,12 @@ export default class SendEmbed extends Command {
 					await msg.delete().catch(e => { });
 					await embedMessage.delete().catch(e => { });
 					await interact.stop();
-					const embedPrompt: RichEmbed = MessageFunctions.createMsgEmbed(message, "Select Location To Send", "Please mention a channel or give me the ID of the channel where you want this embed to be sent to. To cancel, type `cancel`.");
+					const embedPrompt: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Select Location To Send", "Please mention a channel or give me the ID of the channel where you want this embed to be sent to. To cancel, type `cancel`.");
 					message.channel.send(embedPrompt).then(promptMsg => {
 						const collector: MessageCollector = new MessageCollector(message.channel, m => m.author.id === message.author.id, {
 							time: 600000
 						});
-						collector.on("collect", async m => {
+						collector.on("collect", async (m: Message) => {
 							if (m.content === "cancel") {
 								collector.stop();
 								return;
@@ -360,12 +360,12 @@ export default class SendEmbed extends Command {
 								return;
 							}
 
-							if (!(resolvedChannel as TextChannel).permissionsFor(message.guild.me).has(["READ_MESSAGES", "SEND_MESSAGES"])) {
+							if (!(resolvedChannel as TextChannel).permissionsFor(message.guild.me).has(["SEND_MESSAGES", "READ_MESSAGE_HISTORY"])) {
 								MessageFunctions.sendRichEmbed(message, MessageFunctions.msgConditions(message, "NO_CHAN_PERMISSIONS", "READ_MESSAGES", "SEND_MESSAGES"));
 								return;
 							}
 
-							m.delete().catch(e => { });
+							await m.delete().catch(e => { });
 
 							(resolvedChannel as TextChannel).send(embed).catch(e => { });
 							(promptMsg as Message).delete().catch(e => { });
@@ -393,7 +393,7 @@ export default class SendEmbed extends Command {
 
 			interact.on("end", async (elem, reason) => {
 				if (reason === "time") {
-					await (msg as Message).delete().catch(e => { });
+					await msg.delete().catch(e => { });
 					embedMessage.delete().catch(e => { });
 					return;
 				}
@@ -423,7 +423,8 @@ export default class SendEmbed extends Command {
 			});
 
 			await message.edit(MessageFunctions.createMsgEmbed(message, "Prompt", prompt));
-			collector.on("collect", async m => {
+
+			collector.on("collect", async (m: Message) => {
 				await m.delete().catch(e => { });
 				if (m.content === "cancel") {
 					resolve("CANCEL_PROCESS");
@@ -446,12 +447,12 @@ export default class SendEmbed extends Command {
 	}
 
 	/**Checks to see if the embed size is exceeded. */
-	private exceedsLimit(embed: RichEmbed, item: string, resp: string | number): boolean {
+	private exceedsLimit(embed: MessageEmbed, item: string, resp: string | number): boolean {
 		return embed.length - (item ? item.length : 0) + (typeof resp === "string" ? resp.length : resp) > this.maximumCharacters;
 	}
 
 	/**Edits the introduction embed with info from the resultant embed. */
-	private editEmbedWithLimit(embed: RichEmbed, rEmbed: RichEmbed): RichEmbed {
+	private editEmbedWithLimit(embed: MessageEmbed, rEmbed: MessageEmbed): MessageEmbed {
 		embed.setFooter(`Fields Used: ${rEmbed.fields.length}/25 • Characters Used: ${rEmbed.length}/6000`);
 		return embed;
 	}

@@ -1,4 +1,4 @@
-import { Client, Guild, User, RichEmbed, TextChannel, GuildAuditLogsEntry } from "discord.js";
+import { Client, Guild, User, MessageEmbed, TextChannel, GuildAuditLogsEntry } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../Models/TurkieBotGuild";
 import { Colors } from "../Configuration/Configuration";
 import MessageFunctions from "../Utility/MessageFunctions";
@@ -23,14 +23,14 @@ module.exports.run = async (client: Client, guild: Guild, user: User): Promise<v
 				return;
 			}
 
-			const banAdd: RichEmbed = new RichEmbed()
-				.setAuthor(user.tag, user.displayAvatarURL)
+			const banAdd: MessageEmbed = new MessageEmbed()
+				.setAuthor(user.tag, user.avatarURL({ format: "png" }))
 				.setTitle("🔨 Member Banned")
 				.setDescription(`${user} was banned from ${guild.name}.`)
 				.addField("User ID", MessageFunctions.codeBlockIt(user.id), true)
 				.addField("Banned By", admin)
 				.addField("Reason", entry.reason ? MessageFunctions.codeBlockIt(entry.reason) : MessageFunctions.codeBlockIt("None"))
-				.setThumbnail(user.displayAvatarURL)
+				.setThumbnail(user.avatarURL({ format: "png" }))
 				.setTimestamp()
 				.setColor(Colors.randomElement())
 				.setFooter("Turkie");

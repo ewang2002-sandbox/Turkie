@@ -8,7 +8,7 @@ import { MongoDBConnectionURL } from "./Configuration/Configuration";
 /**
  * The basis for the Discord bot.
  */
-export class Turkie {
+export class TurkieBot {
 	private client: Client;
 	private token: string;
 	public static commands: Map<string, Command>;
@@ -20,14 +20,11 @@ export class Turkie {
 	public constructor(token: string) {
 		this.client = new Client({
 			disabledEvents: [
-				'USER_NOTE_UPDATE',
-				'TYPING_START',
-				'RELATIONSHIP_ADD',
-				'RELATIONSHIP_REMOVE'
+				"TYPING_START"
 			]
 		});
 		this.token = token;
-		Turkie.commands = this.loadCommands();
+		TurkieBot.commands = this.loadCommands();
 		this.connect();
 		this.eventLoader();
 	}

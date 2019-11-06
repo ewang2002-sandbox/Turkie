@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed } from "discord.js";
+import { Client, Message, MessageEmbed } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../../Models/TurkieBotGuild";
 import { MongoDB } from "../../Handlers/MongoDBHandler";
 import MessageFunctions from "../../Utility/MessageFunctions";
@@ -31,7 +31,7 @@ export default class ConfigAntiSpam extends Command {
 					MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 					return;
 				} else {
-					const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, `AntiSpam ${!guildInfo.moderation.antiSpam.isEnabled ? "Enabled" : "Disabled"}`, `${!guildInfo.moderation.antiSpam.isEnabled ? "AntiSpam has been enabled." : "AntiSpam has been disabled."}`);
+					const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, `AntiSpam ${!guildInfo.moderation.antiSpam.isEnabled ? "Enabled" : "Disabled"}`, `${!guildInfo.moderation.antiSpam.isEnabled ? "AntiSpam has been enabled." : "AntiSpam has been disabled."}`);
 					MessageFunctions.sendRichEmbed(message, embed);
 				}
 			});
@@ -55,7 +55,7 @@ export default class ConfigAntiSpam extends Command {
 						MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 						return;
 					} else {
-						const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "AntiSpam Module Updated", `The AntiSpam module will be triggered when ${num} messages are sent within ${guildInfo.moderation.antiSpam.time} milliseconds.`);
+						const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "AntiSpam Module Updated", `The AntiSpam module will be triggered when ${num} messages are sent within ${guildInfo.moderation.antiSpam.time} milliseconds.`);
 						MessageFunctions.sendRichEmbed(message, embed);
 						return;
 					}
@@ -68,7 +68,7 @@ export default class ConfigAntiSpam extends Command {
 						MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 						return;
 					} else {
-						const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "AntiSpam Module Updated", `The AntiSpam module will be triggered when ${guildInfo.moderation.antiSpam.amount} messages are sent within ${num} seconds.`);
+						const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "AntiSpam Module Updated", `The AntiSpam module will be triggered when ${guildInfo.moderation.antiSpam.amount} messages are sent within ${num} seconds.`);
 						MessageFunctions.sendRichEmbed(message, embed);
 						return;
 					}

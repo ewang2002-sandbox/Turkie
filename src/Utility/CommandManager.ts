@@ -1,6 +1,6 @@
-import { Turkie } from "../Bot";
+import { TurkieBot } from "../TurkieBot";
 import { Command } from "../Models/Command";
-import { RichEmbed, Client } from "discord.js";
+import { MessageEmbed, Client } from "discord.js";
 import { Colors } from "../Configuration/Configuration";
 import MessageFunctions from "./MessageFunctions";
 
@@ -11,7 +11,7 @@ export class CommandManager {
 	// The command query, if any.
 	private command: string;
 	// The command list (access static member of Turkie).
-	private commandsList: Map<string, Command> = Turkie.commands;
+	private commandsList: Map<string, Command> = TurkieBot.commands;
 	// The client.
 	private client: Client;
 
@@ -51,14 +51,14 @@ export class CommandManager {
 	 * 
 	 * Gets help information on a command.
 	 */
-	public helpCommand(): RichEmbed {
+	public helpCommand(): MessageEmbed {
 		const command: Command = this.findCommand();
 
 		// honestly, probably unneeded
 		if (!command) {
-			const errNoCommandEmbed = new RichEmbed()
+			const errNoCommandEmbed = new MessageEmbed()
 				.setTitle("Command Not Found")
-				.setAuthor(this.client.user.tag, this.client.user.displayAvatarURL)
+				.setAuthor(this.client.user.tag, this.client.user.avatarURL({ format: "png" }))
 				.setDescription(`The command, \`${this.command}\`, was not found. Try again.`)
 				.setColor(Colors.randomElement())
 				.setFooter("⚠ Command Not Found");
@@ -73,8 +73,8 @@ export class CommandManager {
 		const bowner = command.botOwnerOnly ? "Yes" : "No";
 		const gonly = command.guildOnly ? "Yes" : "No";
 
-		const helpEmbed = new RichEmbed()
-			.setAuthor(command.commandName, this.client.user.avatarURL)
+		const helpEmbed = new MessageEmbed()
+			.setAuthor(command.commandName, this.client.user.avatarURL({ format: "png" }))
 			.setColor(Colors.randomElement())
 			.setDescription(command.description)
 			.setFooter("<> Indicate Required. [] Indicate Optional. Do NOT Include <> & [].")

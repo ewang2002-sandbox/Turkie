@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed } from "discord.js";
+import { Client, Message, MessageEmbed } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../../Models/TurkieBotGuild";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { Colors } from "../../Configuration/Configuration.Sample";
@@ -36,8 +36,8 @@ export default class ViewConfiguration extends Command {
 		}
 
 		if (args.includes("--extra")) {
-			const embed: RichEmbed = new RichEmbed()
-				.setAuthor(message.guild.name, message.guild.iconURL)
+			const embed: MessageEmbed = new MessageEmbed()
+				.setAuthor(message.guild.name, message.guild.iconURL({format: "png" }))
 				.setColor(Colors.randomElement());
 			// begin getting info
 			if (args[0] === "moderation") {
@@ -76,21 +76,21 @@ export default class ViewConfiguration extends Command {
 			message.channel.send(embed).catch(e => { });
 			return;
 		}
-		await this.serverSettings(message, query).then(async (embed: RichEmbed) => {
+		await this.serverSettings(message, query).then(async (embed: MessageEmbed) => {
 			await message.channel.send(embed);
 		});
 	}
 
 	/**Gets the server settings. */
-	private serverSettings(message: Message, query: string): Promise<RichEmbed> {
+	private serverSettings(message: Message, query: string): Promise<MessageEmbed> {
 		// wait a minute
 		// i could have just done a for loop through the guildInfo obj.
 		// welp im an idiot
 		// TODO fix
 		return new Promise((resolve, reject) => {
-			const settings = new RichEmbed()
+			const settings = new MessageEmbed()
 				.setColor(Colors.randomElement())
-				.setAuthor(message.author.tag, message.author.avatarURL)
+				.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 				.setTimestamp()
 				.setFooter("Turkie Settings")
 				.setTitle(`Server Settings: ${message.guild.name}`);

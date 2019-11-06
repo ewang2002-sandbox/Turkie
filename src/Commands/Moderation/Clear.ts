@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, Collection, RichEmbed, TextChannel } from "discord.js";
+import { Client, Message, Collection, MessageEmbed, TextChannel } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { Colors } from "../../Configuration/Configuration";
@@ -35,7 +35,7 @@ export default class Clear extends Command {
 
 		let amtMessages: number = Number.parseInt(messagetoDelete);
 		
-        let messages: Collection<string, Message> = await message.channel.fetchMessages({
+        let messages: Collection<string, Message> = await message.channel.messages.fetch({
             limit: amtMessages && amtMessages <= 100 ? amtMessages : 100
         });
 
@@ -59,8 +59,8 @@ export default class Clear extends Command {
 		
 		let resultantMsgs = await message.channel.bulkDelete(messages, true).catch(e => { });
 
-		const embed: RichEmbed = new RichEmbed()
-			.setAuthor(message.author.tag, message.author.avatarURL)
+		const embed: MessageEmbed = new MessageEmbed()
+			.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 			.setTitle("♻ **Purge Successful!**")
 			.setDescription(`${resultantMsgs ? `${resultantMsgs.size} messages have been cleared.` : "No messages have been cleared."}`)
 			.addField("Moderator", `${message.author} (${message.author.id})`)

@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed, TextChannel } from "discord.js";
+import { Client, Message, MessageEmbed, TextChannel } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../../Models/TurkieBotGuild";
 import { MongoDB } from "../../Handlers/MongoDBHandler";
 import MessageFunctions from "../../Utility/MessageFunctions";
@@ -31,7 +31,7 @@ export default class ConfigAntiRaid extends Command {
 					MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 					return;
 				} else {
-					const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, `AntiRaid ${!guildInfo.moderation.antiRaid.isEnabled ? "Enabled" : "Disabled"}`, `${!guildInfo.moderation.antiRaid.isEnabled ? "AntiRaid has been enabled." : "AntiRaid has been disabled."}`);
+					const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, `AntiRaid ${!guildInfo.moderation.antiRaid.isEnabled ? "Enabled" : "Disabled"}`, `${!guildInfo.moderation.antiRaid.isEnabled ? "AntiRaid has been enabled." : "AntiRaid has been disabled."}`);
 					MessageFunctions.sendRichEmbed(message, embed);
 				}
 			});
@@ -55,7 +55,7 @@ export default class ConfigAntiRaid extends Command {
 						MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 						return;
 					} else {
-						const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "AntiRaid Module Updated", `The AntiRaid system module will be triggered when ${num} members join within ${guildInfo.moderation.antiRaid.timeAllowed} milliseconds.`);
+						const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "AntiRaid Module Updated", `The AntiRaid system module will be triggered when ${num} members join within ${guildInfo.moderation.antiRaid.timeAllowed} milliseconds.`);
 						MessageFunctions.sendRichEmbed(message, embed);
 						return;
 					}
@@ -68,7 +68,7 @@ export default class ConfigAntiRaid extends Command {
 						MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 						return;
 					} else {
-						const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "AntiRaid Module Updated", `The AntiRaid system module will be triggered when ${guildInfo.moderation.antiRaid.amount} members join within ${num} seconds.`);
+						const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "AntiRaid Module Updated", `The AntiRaid system module will be triggered when ${guildInfo.moderation.antiRaid.amount} members join within ${num} seconds.`);
 						MessageFunctions.sendRichEmbed(message, embed);
 						return;
 					}

@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed } from "discord.js";
+import { Client, Message, MessageEmbed } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../../Models/TurkieBotGuild";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { MongoDB } from "../../Handlers/MongoDBHandler";
@@ -30,7 +30,7 @@ export default class DeleteCommandTrigger extends Command {
 				MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 				return;
 			} else {
-				const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Command Trigger Updated", `${!guildInfo.serverConfiguration.commands.deleteCommandTrigger ? "The bot will now delete all command trigger messages." : "The bot will no longer delete all command trigger messages."}`);
+				const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Command Trigger Updated", `${!guildInfo.serverConfiguration.commands.deleteCommandTrigger ? "The bot will now delete all command trigger messages." : "The bot will no longer delete all command trigger messages."}`);
 				MessageFunctions.sendRichEmbed(message, embed);
 			}
 		});

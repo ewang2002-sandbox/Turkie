@@ -93,13 +93,13 @@ module.exports.run = async (client: Client, message: Message): Promise<void> => 
 async function getMember(client: Client, message: Message): Promise<GuildMember | User> {
 	return new Promise((resolve, reject) => {
 		if (message.guild) {
-			client.fetchUser(message.author.id).then(async user => {
-				message.guild.fetchMember(user.id).then(async author => {
+			client.users.fetch(message.author.id).then(async user => {
+				message.guild.members.fetch(user.id).then(async author => {
 					return resolve(author);
 				});
 			});
 		} else {
-			client.fetchUser(message.author.id).then(async user => {
+			client.users.fetch(message.author.id).then(async user => {
 				return resolve(user);
 			});
 		}

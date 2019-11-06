@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed, TextChannel, User } from "discord.js";
+import { Client, Message, MessageEmbed, TextChannel, User } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import { Colors } from "../../Configuration/Configuration";
 import MessageFunctions from "../../Utility/MessageFunctions";
@@ -31,18 +31,18 @@ export default class Unban extends Command {
 			let isFound: boolean = false;
 			let userUnbanned: User;
 			for (let [id, user] of bans) {
-				if (user.tag === idOrUser || id === idOrUser) {
+				if (user.user.tag === idOrUser || id === idOrUser) {
 					isFound = true;
-					userUnbanned = user;
-					await message.guild.unban(user, reason).catch(e => { });
+					userUnbanned = user.user
+					await message.guild.members.unban(user.user, reason).catch(e => { });
 					break;
 				}
 			}
 
 			if (isFound) {
-				const embed: RichEmbed = new RichEmbed()
+				const embed: MessageEmbed = new MessageEmbed()
 					.setTitle("**Unban Successful!**")
-					.setAuthor(message.author.tag, message.author.avatarURL)
+					.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 					.setDescription("The user has been unbanned successfully.")
 					.addField("Unbanned User", `${userUnbanned} (${userUnbanned.id})`)
 					.addField("Moderator", `${message.author} (${message.author.id})`)

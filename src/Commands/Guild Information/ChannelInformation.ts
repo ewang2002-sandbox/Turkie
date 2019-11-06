@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, TextChannel, RichEmbed } from "discord.js";
+import { Client, Message, TextChannel, MessageEmbed } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import { EnhancedDates } from "../../Utility/EnhancedDates";
 import MessageFunctions from "../../Utility/MessageFunctions";
@@ -35,8 +35,8 @@ export default class ChannelInformation extends Command {
 		}
 
 		if (channel) {
-			const channelEmbed = new RichEmbed()
-				.setAuthor(message.author.tag, message.author.avatarURL)
+			const channelEmbed = new MessageEmbed()
+				.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 				.setTitle(`Channel Information: #${channel.name}`)
 				.setDescription((channel.topic === null || channel.topic.length < 2) ? 'No Channel Topic' : channel.topic)
 				.addField("Channel ID", `${channel.id}`, true)
@@ -48,7 +48,7 @@ export default class ChannelInformation extends Command {
 				.setColor(Colors.randomElement());
 			message.channel.send(channelEmbed);
 		} else {
-			const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "No Channel Found", "The channel you specified does not exist.");
+			const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "No Channel Found", "The channel you specified does not exist.");
 			message.channel.send(embed).catch(e => { });
 		}
 	}

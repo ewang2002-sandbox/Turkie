@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed } from "discord.js";
+import { Client, Message, MessageEmbed } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import { EnhancedDates } from "../../Utility/EnhancedDates";
 import { Colors } from "../../Configuration/Configuration";
@@ -42,8 +42,8 @@ export default class CustomCommandInfo extends Command {
 		}
 
 		if (isFound) {
-			const d: RichEmbed = new RichEmbed()
-				.setAuthor(message.author.tag, message.author.avatarURL)
+			const d: MessageEmbed = new MessageEmbed()
+				.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 				.setTitle("Custom Commands Information")
 				.setDescription(`This command was created on ${EnhancedDates.formatUTCDate(info.commandCreatedAt)}.`)
 				.setFooter("Custom Commands")

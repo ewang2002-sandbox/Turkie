@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed } from "discord.js";
+import { Client, Message, MessageEmbed } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../../Models/TurkieBotGuild";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { MongoDB } from "../../Handlers/MongoDBHandler";
@@ -32,7 +32,7 @@ export default class ConfigAntiMention extends Command {
 					MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 					return;
 				} else {
-					const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, `AntiMention ${!guildInfo.moderation.antiMention.isEnabled ? "Enabled" : "Disabled"}`, `${!guildInfo.moderation.antiMention.isEnabled ? "AntiMention has been enabled successfully." : "AntiMention has been disabled successfully."}`);
+					const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, `AntiMention ${!guildInfo.moderation.antiMention.isEnabled ? "Enabled" : "Disabled"}`, `${!guildInfo.moderation.antiMention.isEnabled ? "AntiMention has been enabled successfully." : "AntiMention has been disabled successfully."}`);
 					MessageFunctions.sendRichEmbed(message, embed);
 				}
 			});
@@ -47,7 +47,7 @@ export default class ConfigAntiMention extends Command {
 						MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 						return;
 					} else {
-						const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "AntiMention Updated", `AntiMention will now be triggered at ${num} mentions.`);
+						const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "AntiMention Updated", `AntiMention will now be triggered at ${num} mentions.`);
 						MessageFunctions.sendRichEmbed(message, embed);
 						return;
 					}

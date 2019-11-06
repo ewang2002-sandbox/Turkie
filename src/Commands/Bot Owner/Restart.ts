@@ -25,11 +25,11 @@ export default class Restart extends Command {
 	public async execute(client: Client, message: Message, args: string[], guildInfo: GuildInterface): Promise<void> {
 		let msg = await MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Bot Restart Pending", "The bot restart is now pending."));
 
-		setTimeout(() => {
-			client.destroy().then(() => client.login(Token)).then(() => {
-				MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Bot Restart Complete", "The bot restart has been completed."));
-				msg.delete().catch(e => { });
-			});
+		setTimeout(async () => {
+			client.destroy();
+			await client.login(Token);
+			await MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Bot Restart Complete", "The bot restart has been completed."));
+			await msg.delete().catch(e => { });
 		}, 500);
 	}
 }

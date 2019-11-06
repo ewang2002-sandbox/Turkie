@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed, Role, Guild } from "discord.js";
+import { Client, Message, MessageEmbed, Role, Guild } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../../Models/TurkieBotGuild";
 import { MongoDB } from "../../Handlers/MongoDBHandler";
 import MessageFunctions from "../../Utility/MessageFunctions";
@@ -31,7 +31,7 @@ export default class ConfigureAutoRole extends Command {
 					MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 					return;
 				} else {
-					const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Configured AutoRole", `${!guildInfo.serverConfiguration.autoRole.isEnabled ? "AutoRole has been enabled. Make sure you get some roles ready!" : "AutoRoles has been disabled."}`);
+					const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Configured AutoRole", `${!guildInfo.serverConfiguration.autoRole.isEnabled ? "AutoRole has been enabled. Make sure you get some roles ready!" : "AutoRoles has been disabled."}`);
 					MessageFunctions.sendRichEmbed(message, embed);
 				}
 			});

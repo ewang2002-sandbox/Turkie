@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed } from "discord.js";
+import { Client, Message, MessageEmbed } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import { Colors } from "../../Configuration/Configuration";
 import MessageFunctions from "../../Utility/MessageFunctions";
@@ -24,10 +24,10 @@ export default class BotInformation extends Command {
 
 	public async execute(client: Client, message: Message, args: string[], guildInfo: GuildInterface): Promise<void> {
 		let time = this.convertMS(client.uptime);
-		const embed: RichEmbed = new RichEmbed()
+		const embed: MessageEmbed = new MessageEmbed()
 			.setColor(Colors.randomElement())
 			.setImage("https://github.com/ewang20027/Turkie/raw/master/images/Turkie.png")
-			.setAuthor(client.user.tag, client.user.displayAvatarURL)
+			.setAuthor(client.user.tag, client.user.avatarURL({ format: "png" }))
 			.setTitle(`**Bot Information: Turkie (${require("../../../package.json").version})**`)
 			.setDescription("Turkie is a bot that primarily focuses on moderation. It was designed with the following ideas in mind.\n- To be free for everyone to use (i.e. no paywall behind features).\n- To be free of bloat (i.e. no useless commands that will slow the bot down).\n- To be clear, complete, and concise (i.e. easy to use).")
 			.addField("Framework", "`Discord.JS` ⇨ [discord.js.org](https://discord.js.org/)", true)

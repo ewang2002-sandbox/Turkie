@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, Collection, GuildMember, Guild, MessageCollector, RichEmbed } from "discord.js";
+import { Client, Message, Collection, GuildMember, Guild, MessageCollector, MessageEmbed } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import { ModerationEnforcement } from "../../Handlers/ModerationEnforcement";
 import MessageFunctions from "../../Utility/MessageFunctions";
@@ -83,7 +83,7 @@ export default class IssueStrikes extends Command {
 				}
 
 				// make sure not equal/above in role hierachy
-				if (message.author.id !== message.guild.ownerID && message.member.highestRole.comparePositionTo(member.highestRole) <= 0) {
+				if (message.author.id !== message.guild.ownerID && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) {
 					membersHigherRole.push(member);
 					continue;
 				}
@@ -99,7 +99,7 @@ export default class IssueStrikes extends Command {
 		}
 
 		if (membersToPunish.length === 0) {
-			const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "No Members To Strike", "You cannot add or remove strikes from members for the following reasons.\n- The member is a bot.\n- The member has the `Kick Members` Permission.\n- The member is equal or above you based on role hierachy.\n\nAlso remember that you cannot remove strikes from a user if he or she has no strikes.");
+			const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "No Members To Strike", "You cannot add or remove strikes from members for the following reasons.\n- The member is a bot.\n- The member has the `Kick Members` Permission.\n- The member is equal or above you based on role hierachy.\n\nAlso remember that you cannot remove strikes from a user if he or she has no strikes.");
 			if (membersWithKickPermissions.length > 0) {
 				embed.addField("User(s) With **Kick Members** Permissions", membersWithKickPermissions.join(" "));
 			}
@@ -115,7 +115,7 @@ export default class IssueStrikes extends Command {
 			return;
 		}
 
-		const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Specify Reason For Strike(s)", `Please input a reason for the strikes. If you do not want to give a reason, please type \`none\`. To cancel this process, type \`cancel\`.\n\n${membersWithKickPermissions.length > 0 ? "⚠ You are unable to strike members with the `Kick Members` permission.\n" : ""}${membersThatIsBot.length > 0 ? "⚠ You are unable to strike a bot.\n" : ""}${membersHigherRole.length > 0 ? "⚠ You are unable to strike members with equal or higher role positions than your position (based on role hierachy)." : ""}`, [
+		const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Specify Reason For Strike(s)", `Please input a reason for the strikes. If you do not want to give a reason, please type \`none\`. To cancel this process, type \`cancel\`.\n\n${membersWithKickPermissions.length > 0 ? "⚠ You are unable to strike members with the `Kick Members` permission.\n" : ""}${membersThatIsBot.length > 0 ? "⚠ You are unable to strike a bot.\n" : ""}${membersHigherRole.length > 0 ? "⚠ You are unable to strike members with equal or higher role positions than your position (based on role hierachy)." : ""}`, [
 			{
 				name: "Users To Strike",
 				value: membersToPunish.join(" ")
@@ -150,10 +150,10 @@ export default class IssueStrikes extends Command {
 		});
 
 		message.channel.send(embed).then(async msg => {
-			collector.on("collect", (m) => {
+			collector.on("collect", (m: Message) => {
 				if (m.content === "cancel") {
 					collector.stop();
-					(msg as Message).delete().catch(e => { });
+					msg.delete().catch(e => { });
 					m.delete().catch(e => { });
 					return;
 				}
@@ -167,7 +167,7 @@ export default class IssueStrikes extends Command {
 				}
 
 				collector.stop();
-				(msg as Message).delete().catch(e => { });
+				msg.delete().catch(e => { });
 				m.delete().catch(e => { });
 
 				const punishmentManager = new ModerationEnforcement(message, guildInfo, members);

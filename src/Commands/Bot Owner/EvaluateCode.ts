@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed } from "discord.js";
+import { Client, Message, MessageEmbed } from "discord.js";
 import { inspect } from "util";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import { Colors } from "../../Configuration/Configuration";
@@ -25,8 +25,8 @@ export default class EvaluateCode extends Command {
 	public async execute(client: Client, message: Message, args: string[], guildInfo: GuildInterface): Promise<void> {
 		const code: string = args.join(" ");
 
-		const codeEmbed: RichEmbed = new RichEmbed()
-			.setAuthor(message.author.tag, message.author.avatarURL)
+		const codeEmbed: MessageEmbed = new MessageEmbed()
+			.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 			.setTitle('Eval Command Results')
 			.setColor(Colors.randomElement())
 			.addField('📥 Input', `\`\`\`\n${code}\n\`\`\``);

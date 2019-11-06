@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed } from "discord.js";
+import { Client, Message, MessageEmbed } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { Colors } from "../../Configuration/Configuration";
@@ -24,11 +24,11 @@ export default class Poll extends Command {
 
 	public async execute(client: Client, message: Message, args: string[], guildInfo: GuildInterface): Promise<void> {
 		if (args.join(" ").indexOf(";") === -1) {
-			const pollEmbed: RichEmbed = new RichEmbed()
-				.setAuthor(`${message.author.tag}`, message.author.avatarURL)
+			const pollEmbed: MessageEmbed = new MessageEmbed()
+				.setAuthor(`${message.author.tag}`, message.author.avatarURL({ format: "png" }))
 				.setColor(Colors.randomElement())
 				.setDescription(args.join(" "))
-				.setThumbnail(message.author.avatarURL)
+				.setThumbnail(message.author.avatarURL({ format: "png" }))
 				.setFooter('Turkie')
 				.setTimestamp();
 			message.channel.send(pollEmbed).then(async msg => {
@@ -39,11 +39,11 @@ export default class Poll extends Command {
 			});
 			return;
 		} else if (args.join(" ").split(";").length < 2) {
-			const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Error", "You must input a question and at least one answer, separated by a semicolon (`;`).")
+			const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Error", "You must input a question and at least one answer, separated by a semicolon (`;`).")
 			message.channel.send(embed)						
 				.then(msg => {
 					msg = msg as Message;
-					msg.delete(5000);
+					msg.delete({ timeout: 5000 });
 				})
 				.catch(e => { });
 			return;
@@ -64,11 +64,11 @@ export default class Poll extends Command {
 		
 		if (actualChoices.length <= 21) {
 			if (actualChoices.length <= 1) {
-				const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Error", "None of your choices were valid. Please try again.");
+				const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Error", "None of your choices were valid. Please try again.");
 				message.channel.send(embed)
 					.then(msg => {
 						msg = msg as Message;
-						msg.delete(5000);
+						msg.delete({ timeout: 5000 });
 					})
 					.catch(e => { });
 				return;
@@ -84,11 +84,11 @@ export default class Poll extends Command {
 				}
 			}
 
-			const pollEmbed: RichEmbed = new RichEmbed()
-				.setAuthor(`Poll Initiated By ${message.author.tag}!`, message.author.avatarURL)
+			const pollEmbed: MessageEmbed = new MessageEmbed()
+				.setAuthor(`Poll Initiated By ${message.author.tag}!`, message.author.avatarURL({ format: "png" }))
 				.setColor(Colors.randomElement())
 				.setDescription(word.split(/;/)[0])
-				.setThumbnail(message.author.avatarURL)
+				.setThumbnail(message.author.avatarURL({ format: "png" }))
 				.addField("Choices [I]", options)
 				.setFooter('Turkie')
 				.setTimestamp();
@@ -105,11 +105,11 @@ export default class Poll extends Command {
 			// poll = 1;
 			// pollreact = word.split(/;/).length - 1;
 		} else {
-			const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, 'Poll Error', 'You can only input a maximum of 20 choices.');
+			const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, 'Poll Error', 'You can only input a maximum of 20 choices.');
 			message.channel.send(embed)
 				.then(msg => {
 					msg = msg as Message;
-					msg.delete(5000);
+					msg.delete({ timeout: 5000 });
 				})
 				.catch(e => { });
 		}

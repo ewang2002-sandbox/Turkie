@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed } from "discord.js";
+import { Client, Message, MessageEmbed } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import { Colors } from "../../Configuration/Configuration";
 
@@ -22,8 +22,8 @@ export default class BotInvite extends Command {
 	}
 
 	public async execute(client: Client, message: Message, args: string[], guildInfo: GuildInterface): Promise<void> {
-		const embed: RichEmbed = new RichEmbed()
-			.setAuthor(message.author.tag, message.author.displayAvatarURL)
+		const embed: MessageEmbed = new MessageEmbed()
+			.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 			.setTitle("**Invite Link: Turkie**")
 			.setDescription("Thank you for trying out Turkie!")
 			.addField("Bot Invite Link", "Click [Here](https://discordapp.com/api/oauth2/authorize?client_id=594006522816626690&permissions=8&scope=bot)")

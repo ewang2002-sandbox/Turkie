@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed } from "discord.js";
+import { Client, Message, MessageEmbed } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../../Models/TurkieBotGuild";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { MongoDB } from "../../Handlers/MongoDBHandler";
@@ -31,7 +31,7 @@ export default class WelcomeMessage extends Command {
 					MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 					return;
 				} else {
-					const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Configured Welcome Message", `${!guildInfo.serverConfiguration.welcomeMessage.isEnabled ? "The welcome message notification has been enabled. Make sure you have a message set!" : "Welcome message notification has been disabled."}`);
+					const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Configured Welcome Message", `${!guildInfo.serverConfiguration.welcomeMessage.isEnabled ? "The welcome message notification has been enabled. Make sure you have a message set!" : "Welcome message notification has been disabled."}`);
 					MessageFunctions.sendRichEmbed(message, embed);
 				}
 			});

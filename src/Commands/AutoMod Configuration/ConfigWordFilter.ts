@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed, Guild } from "discord.js";
+import { Client, Message, MessageEmbed, Guild } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../../Models/TurkieBotGuild";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { Colors } from "../../Configuration/Configuration";
@@ -33,15 +33,15 @@ export default class ConfigWordFilter extends Command {
 					MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 					return;
 				} else {
-					const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, `Word Filter ${!guildInfo.moderation.wordFilter.isEnabled ? "Enabled" : "Disabled"}`, `${!guildInfo.moderation.wordFilter.isEnabled ? "The word filter has been enabled successfully." : "The word filter has been disabled successfully."}`);
+					const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, `Word Filter ${!guildInfo.moderation.wordFilter.isEnabled ? "Enabled" : "Disabled"}`, `${!guildInfo.moderation.wordFilter.isEnabled ? "The word filter has been enabled successfully." : "The word filter has been disabled successfully."}`);
 					MessageFunctions.sendRichEmbed(message, embed);
 					return;
 				}
 			});
 			return;
 		} else if (["view", "words", "list"].includes(args.join(" "))) {
-			const embed: RichEmbed = new RichEmbed()
-				.setAuthor(message.author.tag, message.author.avatarURL)
+			const embed: MessageEmbed = new MessageEmbed()
+				.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 				.setTitle("**Current Filtered Words**")
 				.setColor(Colors.randomElement())
 				.setDescription(guildInfo.moderation.wordFilter.words.join(", ").length > 2048 ? guildInfo.moderation.wordFilter.words.join(", ").slice(0, 2040) + "..." : guildInfo.moderation.wordFilter.words.join(", "))
@@ -60,7 +60,7 @@ export default class ConfigWordFilter extends Command {
 						MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 						return;
 					} else {
-						const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Word Removed", `The word, \`${word}\`, was removed from the word filter.`);
+						const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Word Removed", `The word, \`${word}\`, was removed from the word filter.`);
 						MessageFunctions.sendRichEmbed(message, embed);
 						return;
 					}
@@ -75,7 +75,7 @@ export default class ConfigWordFilter extends Command {
 						MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 						return;
 					} else {
-						const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Word Added", `The word, \`${word}\`, was added to the word filter.`);
+						const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Word Added", `The word, \`${word}\`, was added to the word filter.`);
 						MessageFunctions.sendRichEmbed(message, embed);
 						return;
 					}

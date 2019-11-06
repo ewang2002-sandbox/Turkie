@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed } from "discord.js";
+import { Client, Message, MessageEmbed } from "discord.js";
 import { CommandManager } from "../../Utility/CommandManager";
 import path from "path";
 import fs from "fs";
@@ -90,8 +90,8 @@ export default class BotHelp extends Command {
 		}
 
 		if (!modToFind || !isFound) {
-			const d = new RichEmbed()
-				.setAuthor(message.author.tag, message.author.avatarURL)
+			const d = new MessageEmbed()
+				.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 				.setTitle("Bot Modules")
 				.setDescription(`Command Usage: \`${guildInfo ? guildInfo.serverConfiguration.prefix : DefaultPrefix}help <Module>\`.`)
 				.addField("Modules", `\`\`\`css\n${mods.join(" • ")}\`\`\``)
@@ -107,7 +107,7 @@ export default class BotHelp extends Command {
 				color: NumberFunctions.randomInt(100000, 16777215),
 				author: {
 					name: message.author.tag,
-					icon_url: message.author.avatarURL
+					icon_url: message.author.avatarURL({ format: "png" })
 				},
                 title: 'Bot Commands List',
                 description: `Use \`${guildInfo ? guildInfo.serverConfiguration.prefix : DefaultPrefix}help <Command Name>\` to learn how to use it.`,

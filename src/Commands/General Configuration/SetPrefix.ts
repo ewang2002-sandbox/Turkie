@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed } from "discord.js";
+import { Client, Message, MessageEmbed } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../../Models/TurkieBotGuild";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { MongoDB } from "../../Handlers/MongoDBHandler";
@@ -30,11 +30,13 @@ export default class SetPrefix extends Command {
 			message.mentions.roles.size > 0 ||
 			message.mentions.users.size > 0 ||
 			message.mentions.channels.size > 0) {
-			const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Invalid Prefix", "The prefix you provided is not allowed. Please do not use mentions.");
+			const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Invalid Prefix", "The prefix you provided is not allowed. Please do not use mentions.");
 			message.channel.send(embed)
 				.then(msg => {
 					msg = msg as Message;
-					msg.delete(5000);
+					msg.delete({
+						timeout: 5000
+					});
 				})
 				.catch(e => { });
 			return;
@@ -47,7 +49,7 @@ export default class SetPrefix extends Command {
 				MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 				return;
 			} else {
-				const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Prefix Saved", `Your new prefix has been saved to \`${newPrefix}\`.`);
+				const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Prefix Saved", `Your new prefix has been saved to \`${newPrefix}\`.`);
 				MessageFunctions.sendRichEmbed(message, embed);
 			}
 		});

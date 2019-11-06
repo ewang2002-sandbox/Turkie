@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed, GuildMember } from "discord.js";
+import { Client, Message, MessageEmbed, GuildMember } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { OtherUtilities } from "../../Utility/OtherUtilities";
@@ -39,8 +39,8 @@ export default class GetLastStrike extends Command {
 			}
 		}
 
-		const resultEmbed: RichEmbed = new RichEmbed()
-			.setAuthor(member.user.tag, member.user.displayAvatarURL)
+		const resultEmbed: MessageEmbed = new MessageEmbed()
+			.setAuthor(member.user.tag, member.user.avatarURL({ format: "png" }))
 			.setTitle(`🚩 **Strike History**: ${member.user.tag} (${member.user.id})`)
 			.setColor(Colors.randomElement())
 			.setFooter("Turkie Moderation");

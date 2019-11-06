@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed } from "discord.js";
+import { Client, Message, MessageEmbed } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import { Colors } from "../../Configuration/Configuration.Sample";
 
@@ -67,8 +67,8 @@ export default class CustomCommandHelp extends Command {
 				true
 			]
 		];
-		const d: RichEmbed = new RichEmbed()
-			.setAuthor(message.author.tag, message.author.avatarURL)
+		const d: MessageEmbed = new MessageEmbed()
+			.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 			.setColor(Colors.randomElement())
 			.setTitle("Custom Commands & Welcome Message Help")
 			.setDescription("Custom commands are a way for you to make basic commands for your server. It's like an auto-responder, but with a prefix so the message author expects it.\

@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed, Channel, TextChannel } from "discord.js";
+import { Client, Message, MessageEmbed, Channel, TextChannel } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../../Models/TurkieBotGuild";
 import { MongoDB } from "../../Handlers/MongoDBHandler";
 import MessageFunctions from "../../Utility/MessageFunctions";
@@ -57,12 +57,12 @@ export default class ConfigLogging extends Command {
 						MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 						return;
 					}
-					const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Toggled Server Logging: Join & Leave", `${!guildInfo.serverConfiguration.serverLogs.joinLeaveLogs.isEnabled ? "The bot will now log all members joining and leaving the server (that is, if a channel is configured)." : "The bot will no longer log all members joining and leaving the server."}`);
+					const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Toggled Server Logging: Join & Leave", `${!guildInfo.serverConfiguration.serverLogs.joinLeaveLogs.isEnabled ? "The bot will now log all members joining and leaving the server (that is, if a channel is configured)." : "The bot will no longer log all members joining and leaving the server."}`);
 					MessageFunctions.sendRichEmbed(message, embed);
 				});
 			} else {
 				// no chans
-				if ((resolvedChannel as TextChannel).permissionsFor(client.user).has(["SEND_MESSAGES", "READ_MESSAGES"])) {
+				if ((resolvedChannel as TextChannel).permissionsFor(client.user).has(["SEND_MESSAGES"])) {
 					TurkieBotGuild.updateOne({ guildID: message.guild.id }, {
 						"serverConfiguration.serverLogs.joinLeaveLogs.channel": resolvedChannel.id
 					}, (err, raw) => {
@@ -70,7 +70,7 @@ export default class ConfigLogging extends Command {
 							MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 							return;
 						}
-						const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Changed Server Logging Channel: Join & Leave", `The bot will now route all join/leave log messages to ${resolvedChannel}.`);
+						const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Changed Server Logging Channel: Join & Leave", `The bot will now route all join/leave log messages to ${resolvedChannel}.`);
 						MessageFunctions.sendRichEmbed(message, embed);
 					});
 				} else {
@@ -86,12 +86,12 @@ export default class ConfigLogging extends Command {
 						MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 						return;
 					}
-					const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Toggled Server Logging: Moderation", `${!guildInfo.serverConfiguration.serverLogs.modLogs.isEnabled ? "The bot will now log all bot-related moderation in the server (that is, if a channel is configured)." : "The bot will no longer log all bot-related moderation in the server."}`);
+					const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Toggled Server Logging: Moderation", `${!guildInfo.serverConfiguration.serverLogs.modLogs.isEnabled ? "The bot will now log all bot-related moderation in the server (that is, if a channel is configured)." : "The bot will no longer log all bot-related moderation in the server."}`);
 					MessageFunctions.sendRichEmbed(message, embed);
 				});
 			} else {
 				// make sure it has perms
-				if ((resolvedChannel as TextChannel).permissionsFor(client.user).has(["SEND_MESSAGES", "READ_MESSAGES"])) {
+				if ((resolvedChannel as TextChannel).permissionsFor(client.user).has(["SEND_MESSAGES"])) {
 					TurkieBotGuild.updateOne({ guildID: message.guild.id }, {
 						"serverConfiguration.serverLogs.modLogs.channel": resolvedChannel.id
 					}, (err, raw) => {
@@ -99,7 +99,7 @@ export default class ConfigLogging extends Command {
 							MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 							return;
 						}
-						const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Changed Server Logging Channel: Moderation", `The bot will now route all moderation log messages to ${resolvedChannel}.`);
+						const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Changed Server Logging Channel: Moderation", `The bot will now route all moderation log messages to ${resolvedChannel}.`);
 						MessageFunctions.sendRichEmbed(message, embed);
 					});
 				} else {

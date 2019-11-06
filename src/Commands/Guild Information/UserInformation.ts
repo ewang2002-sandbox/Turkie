@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, GuildMember, PermissionObject, RichEmbed, PermissionResolvable } from "discord.js";
+import { Client, Message, GuildMember, PermissionObject, MessageEmbed, PermissionResolvable } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import { OtherUtilities } from "../../Utility/OtherUtilities";
 import { ModerationEnforcement } from "../../Handlers/ModerationEnforcement";
@@ -74,17 +74,17 @@ export default class UserInformation extends Command {
 
 
         let p: string = "";
-        if (member.user.presence.game) {
-            p = member.user.presence.game.name;
+        if (member.user.presence.status) {
+            p = member.user.presence.status;
         } else {
             p = "None";
 		}
 		
-        const userInfo = new RichEmbed()
-            .setAuthor(message.author.tag, message.author.avatarURL)
+        const userInfo = new MessageEmbed()
+            .setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
             .setTitle(`User Information: ${member.user.tag}`)
             .setDescription("Some basic user information.")
-            .setThumbnail(member.user.displayAvatarURL)
+            .setThumbnail(member.user.avatarURL({ format: "png" }))
             .setColor(Colors.randomElement())
             .addField("Name", member.user.tag, true)
             .addField("User ID", member.user.id, true)
@@ -94,7 +94,7 @@ export default class UserInformation extends Command {
             .addField("Joined Server", EnhancedDates.formatUTCDate(member.joinedTimestamp), true)
             .addField("Joined Discord", EnhancedDates.formatUTCDate(member.user.createdTimestamp), true)
             .addField("Default Avatar", `[Click Here](${member.user.defaultAvatarURL})`, true)
-            .addField("Current Avatar", `[Click Here](${member.user.displayAvatarURL})`, true)
+            .addField("Current Avatar", `[Click Here](${member.user.avatarURL({ format: "png" })}`, true)
             .addField("Status", status, true)
             .addField("Game", p, true)
 			.setFooter(`${message.guild.ownerID === member.user.id ? 'Server Owner' : ''}`);

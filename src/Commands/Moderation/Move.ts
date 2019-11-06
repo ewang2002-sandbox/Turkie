@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed, GuildMember, MessageCollector, VoiceChannel } from "discord.js";
+import { Client, Message, MessageEmbed, GuildMember, MessageCollector, VoiceChannel } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { Colors } from "../../Configuration/Configuration.Sample";
@@ -36,8 +36,8 @@ export default class Move extends Command {
 				TOMOVEVC.push(vc as VoiceChannel);
 			}
 		}
-		const d: RichEmbed = new RichEmbed()
-			.setAuthor(message.author.tag, message.author.avatarURL)
+		const d: MessageEmbed = new MessageEmbed()
+			.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 			.setTitle("Bulk Voice Channel Move")
 			.setDescription(`Selected: **{Pending}**\nPlease type the number of the voice channel that you want to move people from (originating). The collector will automatically stop after 1 minute.\nIf you want to use your current voice channel, type \`current\` now.\nIf you want to cancel this process, type \`cancel\` now.`)
 			.setFooter(`Selecting Originating Voice Channel`)
@@ -69,18 +69,18 @@ export default class Move extends Command {
 			collector.on("collect", async msgA => {
 				await msgA.delete();
 				if (msgA.content === "current") {
-					if (!message.member.voiceChannel) {
+					if (!message.member.voice.channel) {
 						MessageFunctions.sendRichEmbed(message, MessageFunctions.msgConditions(message, "NOT_IN_VC"));
 						return;
 					}
-					originatingVC = message.member.voiceChannel;
+					originatingVC = message.member.voice.channel;
 					if (!originatingVC.permissionsFor(message.guild.me).has("MOVE_MEMBERS")) {
 						MessageFunctions.sendRichEmbed(message, MessageFunctions.msgConditions(message, "NO_CHAN_PERMISSIONS", "MOVE_MEMBERS"));
 						return;
 					}
 				} else if (msgA.content === "cancel") {
 					collector.stop();
-					await (msg as Message).delete().catch(e => { });
+					await msg.delete().catch(e => { });
 					return;
 				} else {
 					num = parseInt(msgA.content);
@@ -98,8 +98,8 @@ export default class Move extends Command {
 
 				collector.stop();
 
-				const e: RichEmbed = new RichEmbed()
-					.setAuthor(message.author.tag, message.author.avatarURL)
+				const e: MessageEmbed = new MessageEmbed()
+					.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 					.setTitle("Bulk Voice Channel Move")
 					.setDescription(`Selected: **${originatingVC.name}**\nPlease type the number of the voice channel that you want to move people to (destination). The collector will automatically stop after 1 minute.`)
 					.setFooter("Selecting Destination Voice Channel")
@@ -112,7 +112,7 @@ export default class Move extends Command {
 					allDescFields = allDescFields.slice(1);
 				}
 
-				await (msg as Message).edit(e).catch(e => { });
+				await msg.edit(e).catch(e => { });
 
 				const rcollector = new MessageCollector(message.channel, m => m.author.id === message.author.id, {
 					time: 60000
@@ -123,7 +123,7 @@ export default class Move extends Command {
 					num = parseInt(msgB.content);
 					if (msgB.content === "cancel") {
 						collector.stop();
-						await (msg as Message).delete().catch(e => { });
+						await msg.delete().catch(e => { });
 						return;
 					}
 					if (isNaN(num)) {
@@ -143,12 +143,12 @@ export default class Move extends Command {
 					let people = originatingVC.members.array();
 					let promises: any[] = [];
 					people.forEach(person => {
-						promises.push(person.setVoiceChannel(destinationVC.id));
+						promises.push(person.voice.setChannel(destinationVC.id));
 					});
 					Promise.all(promises);
 
-					const f: RichEmbed = new RichEmbed()
-						.setAuthor(message.author.tag, message.author.avatarURL)
+					const f: MessageEmbed = new MessageEmbed()
+						.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 						.setTitle("Bulk Voice Channel Move")
 						.setDescription("The members have been moved successfully.")
 						.addField("Originating VC", originatingVC.name, true)
@@ -156,7 +156,7 @@ export default class Move extends Command {
 						.setFooter("Turkie")
 						.setColor(Colors.randomElement())
 						.setTimestamp();
-					await (msg as Message).edit(f).catch(e => { });
+					await msg.edit(f).catch(e => { });
 				});
 			});
 		});

@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed, Role, PermissionObject } from "discord.js";
+import { Client, Message, MessageEmbed, Role, PermissionObject } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { EnhancedDates } from "../../Utility/EnhancedDates";
@@ -30,12 +30,12 @@ export default class RoleInformation extends Command {
 		}
 
 		if (!role) {
-			const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "No Role Found", "The role does not exist. Roles are sensitive, please make sure capitalization and spelling is correct.");
+			const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "No Role Found", "The role does not exist. Roles are sensitive, please make sure capitalization and spelling is correct.");
 			message.channel.send(embed).catch(e => { });
 			return;
 		}
 
-		let perms: [string, boolean][] = Object.entries(role.serialize());
+		let perms: [string, boolean][] = Object.entries(role.permissions.serialize());
 		let permName: string = "";
 		for (let i = 0; i < perms.length; i++) {
 			if (perms[i][1]) {
@@ -47,8 +47,8 @@ export default class RoleInformation extends Command {
 		permName = permName.replace(/,\s*$/, "");
 
 
-		const roleInfo: RichEmbed = new RichEmbed()
-			.setAuthor(message.author.tag, message.author.avatarURL)
+		const roleInfo: MessageEmbed = new MessageEmbed()
+			.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 			.setTitle(`Role Information: @${role.name}`)
 			.addField("Role ID", `${role.id}`, true)
 			.addField("Role Members", role.members.size, true)

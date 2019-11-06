@@ -26,7 +26,7 @@ export default class GetErrorLogs extends Command {
 		if (args[0] === "get") {
 			if (existsSync("./logs/ErrorLogs.txt")) {
 				message.author.send(`The error log file has been attached.`, {
-					file: "./logs/ErrorLogs.txt",
+					files: ["./logs/ErrorLogs.txt"],
 				});
 			} else {
 				MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "No Error Logs", "There are no error logs available. Maybe you're actually a good programmer?"));

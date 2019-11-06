@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed } from "discord.js";
+import { Client, Message, MessageEmbed } from "discord.js";
 import { inspect } from "util";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import { Colors } from "../../Configuration/Configuration";
@@ -40,7 +40,7 @@ export default class ExecuteTerminal extends Command {
 		// begin try catch
 		try {
 			message.react("✅").catch(e => { });
-			let msgToSend: RichEmbed | string = "";
+			let msgToSend: MessageEmbed | string = "";
 			if (args[0] === "--p") {
 				toParse = args.join(" ").replace("--p", "");
 				plainText = true;
@@ -52,8 +52,8 @@ export default class ExecuteTerminal extends Command {
 			let { stdout, stderr } = await exec(toParse, { timeout: 60 * 1000 });
 
 			if (!plainText) {
-				msgToSend = new RichEmbed()
-					.setAuthor(message.author.tag, message.author.avatarURL)
+				msgToSend = new MessageEmbed()
+					.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 					.setTitle('Results')
 					.setColor(Colors.randomElement())
 					.addField('📥 Input', `\`\`\`bash\n${args.join(" ")}\n\`\`\``);
@@ -64,19 +64,19 @@ export default class ExecuteTerminal extends Command {
 			// if yes
 			if (stdout) {
 				if (!plainText) {
-					await this.extend(msgToSend as RichEmbed, stdout);
+					await this.extend(msgToSend as MessageEmbed, stdout);
 				} else {
 					msgToSend = this.sanitize(stdout);
 				}
 			} else if (stderr) { // else if error
 				if (!plainText) {
-					await this.extend(msgToSend as RichEmbed, stderr);
+					await this.extend(msgToSend as MessageEmbed, stderr);
 				} else {
 					msgToSend = this.sanitize(stderr);
 				}
 			} else {
 				if (!plainText) {
-					(msgToSend as RichEmbed).addField('📤 Output Successful', '```bash\n# Command executed successfully but returned no output.```');
+					(msgToSend as MessageEmbed).addField('📤 Output Successful', '```bash\n# Command executed successfully but returned no output.```');
 				} else {
 					msgToSend = '```bash\n# Command executed successfully but returned no output.```';
 				}
@@ -85,11 +85,11 @@ export default class ExecuteTerminal extends Command {
 			message.channel.send(msgToSend).catch(e => { });
 		} catch (e) {
 			if (e.cmd) {
-				let msgToSend: RichEmbed | string;
+				let msgToSend: MessageEmbed | string;
 
 				if (!plainText) {
-					msgToSend = new RichEmbed()
-						.setAuthor(message.author.tag, message.author.avatarURL)
+					msgToSend = new MessageEmbed()
+						.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 						.setTitle('Results')
 						.setColor(Colors.randomElement())
 						.addField('📥 Input', `\`\`\`bash\n${args}\n\`\`\``);
@@ -99,19 +99,19 @@ export default class ExecuteTerminal extends Command {
 
 				if (e.stdout) {
 					if (!plainText) {
-						this.extend(msgToSend as RichEmbed, e.stdout);
+						this.extend(msgToSend as MessageEmbed, e.stdout);
 					} else {
 						msgToSend = this.sanitize(e.stdout);
 					}
 				} else if (e.stderr) {
 					if (!plainText) {
-						await this.extend(msgToSend as RichEmbed, e.stderr);
+						await this.extend(msgToSend as MessageEmbed, e.stderr);
 					} else {
 						msgToSend = this.sanitize(e.stderr);
 					}
 				} else {
 					if (!plainText) {
-						(msgToSend as RichEmbed).addField('📤 Output Time-Out', '```bash\n# Command was terminated after running for 1 minute and returned no output.```');
+						(msgToSend as MessageEmbed).addField('📤 Output Time-Out', '```bash\n# Command was terminated after running for 1 minute and returned no output.```');
 					} else {
 						msgToSend = '```bash\n# Command was terminated after running for 1 minute and returned no output.```';
 					}
@@ -123,11 +123,11 @@ export default class ExecuteTerminal extends Command {
 	}
 
 	/**
-	* @param {RichEmbed} msgToSend The RichEmbed constructor. 
+	* @param {MessageEmbed} msgToSend The MessageEmbed constructor. 
 	* @param {string} string The string output from execution.
 	* @returns {boolean} 
 	*/
-	private extend(msgToSend: RichEmbed, string: string): boolean {
+	private extend(msgToSend: MessageEmbed, string: string): boolean {
 		let i = 0;
 		let length = 100;
 		while (string.length > 0) {

@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, GuildMember, RichEmbed, TextChannel, User } from "discord.js";
+import { Client, Message, GuildMember, MessageEmbed, TextChannel, User } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import { ModerationEnforcement } from "../../Handlers/ModerationEnforcement";
 import MessageFunctions from "../../Utility/MessageFunctions";
@@ -48,7 +48,7 @@ export default class Ban extends Command {
 		if (typeof member === "string") {
 			let isBanned = true;
 			let reason = args.slice(1).join(' ').length > 0 ? args.slice(1).join(' ') : "No reason provided";
-			await message.guild.ban(args[0], {
+			await message.guild.members.ban(args[0], {
 				days: 7,
 				reason: `[${message.author.tag}] ${reason}`
 			}).catch(e => {
@@ -56,9 +56,9 @@ export default class Ban extends Command {
 			});
 
 			if (isBanned) {
-				const embed: RichEmbed = new RichEmbed()
+				const embed: MessageEmbed = new MessageEmbed()
 					.setTitle("🔨 **Ban Successful!**")
-					.setAuthor(message.author.tag, message.author.avatarURL)
+					.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 					.setDescription("The user has been banned successfully.")
 					.addField("Banned ID", args[0])
 					.addField("Moderator", `${message.author} (${message.author.id})`)
@@ -90,13 +90,13 @@ export default class Ban extends Command {
 				reason = "No reason provided";
 			}
 
-			if (message.author.id !== message.guild.ownerID && message.member.highestRole.comparePositionTo(member.highestRole) <= 0) {
+			if (message.author.id !== message.guild.ownerID && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) {
 				MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Role Hierarchy Error", "The person you are attempting to ban has equal or higher role permissions than you."));
 				return;
 			}
 
-			const d: RichEmbed = new RichEmbed()
-				.setAuthor(message.author.tag, message.author.avatarURL)
+			const d: MessageEmbed = new MessageEmbed()
+				.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 				.setTitle(`🔨 **Banned From: ${message.guild.name}**`)
 				.addField("Moderator", `${message.author} (${message.author.id})`)
 				.addField("Reason", reason)
@@ -105,13 +105,13 @@ export default class Ban extends Command {
 				.setColor(Colors.randomElement())
 				.setFooter("Turkie");
 			await member.send(d).catch(e => { });
-			await message.guild.ban(member.id, {
+			await message.guild.members.ban(member.id, {
 				days: 7,
 				reason: `[${message.author.tag}] ${reason}`
 			});
 
-			const embed: RichEmbed = new RichEmbed()
-				.setAuthor(message.author.tag, message.author.avatarURL)
+			const embed: MessageEmbed = new MessageEmbed()
+				.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 				.setTitle("🔨 **Ban Successful!**")
 				.setDescription("The user has been banned successfully.")
 				.addField("Banned User", `${member} (${member.id})`)

@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, Emoji, RichEmbed, Role } from "discord.js";
+import { Client, Message, Emoji, MessageEmbed, Role } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import { EnhancedDates } from "../../Utility/EnhancedDates";
 import { Colors } from "../../Configuration/Configuration";
@@ -39,15 +39,15 @@ export default class ServerInformation extends Command {
 		const offlineCount: number = message.guild.members.filter(m => m.user.presence.status === 'offline').size;
 		const dndCount: number = message.guild.members.filter(m => m.user.presence.status === 'dnd').size;
 		const idleCount: number = message.guild.members.filter(m => m.user.presence.status === 'idle').size;
-		const streamingCount: number = message.guild.members.filter(m => m.user.presence.game ? m.user.presence.game.streaming === true : false).size;
+		const streamingCount: number = message.guild.members.filter(m => m.user.presence.activity ? m.user.presence.activity.type === "STREAMING" : false).size;
 		onlineCount = onlineCount - streamingCount;
 
-		const embed = new RichEmbed()
-			.setAuthor(message.author.tag, message.author.avatarURL)
+		const embed = new MessageEmbed()
+			.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 			.setTitle(`Guild: **${message.guild.name}**`)
 			.setColor(Colors.randomElement())
 			.setFooter("Turkie")
-			.setThumbnail(message.guild.iconURL)
+			.setThumbnail(message.guild.iconURL({ format: "png" }))
 			.setTimestamp()
 			.setDescription(`This server was created on: ${EnhancedDates.formatUTCDate(message.guild.createdTimestamp)}`)
 			.addField('Region', message.guild.region.replace(/\W/g, ' ').toUpperCase(), true)

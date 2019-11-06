@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed, Channel, TextChannel, CategoryChannel, GuildChannel } from "discord.js";
+import { Client, Message, MessageEmbed, Channel, TextChannel, CategoryChannel, GuildChannel } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../../Models/TurkieBotGuild";
 import { MongoDB } from "../../Handlers/MongoDBHandler";
 import MessageFunctions from "../../Utility/MessageFunctions";
@@ -35,7 +35,7 @@ export default class ConfigLogging extends Command {
 					MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 					return;
 				}
-				const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Toggled Moderation Mail", `${!guildInfo.serverConfiguration.modMail.isEnabled ? "Moderation mail is now enabled for this server. Ensure you have a category set up for moderation mail to work properly.)." : "Moderation mail has been disabled."}`);
+				const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Toggled Moderation Mail", `${!guildInfo.serverConfiguration.modMail.isEnabled ? "Moderation mail is now enabled for this server. Ensure you have a category set up for moderation mail to work properly.)." : "Moderation mail has been disabled."}`);
 				MessageFunctions.sendRichEmbed(message, embed);
 			});
 		}
@@ -70,7 +70,7 @@ export default class ConfigLogging extends Command {
 				MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 				return;
 			}
-			const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Moderation Mail Category Set", `From now on, if someone uses modmail, the bot will create a channel under the __**${resolvedCategory.name}**__ category.`);
+			const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Moderation Mail Category Set", `From now on, if someone uses modmail, the bot will create a channel under the __**${resolvedCategory.name}**__ category.`);
 			MessageFunctions.sendRichEmbed(message, embed);
 		});
 		

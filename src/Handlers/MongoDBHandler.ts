@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { DefaultPrefix } from "../Configuration/Configuration";
 import { MongoError } from "mongodb";
 import TurkieBotGuild, { GuildInterface } from "../Models/TurkieBotGuild";
-import { RichEmbed, Message } from "discord.js";
+import { MessageEmbed, Message } from "discord.js";
 import MessageFunctions from "../Utility/MessageFunctions";
 import TurkieBotUser, { UserInterface } from "../Models/TurkieBotUser";
 
@@ -49,11 +49,11 @@ export namespace MongoDB {
 		 * @returns {void}
 		 */
 		public static sendErrorEmbed(message: Message): void {
-			const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Database Error", "The bot was unable to save your data. Please try again later.");
+			const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Database Error", "The bot was unable to save your data. Please try again later.");
 			message.channel.send(embed)
 				.then(msg => {
 					msg = msg as Message;
-					msg.delete(5000);
+					msg.delete({ timeout: 5000 });
 				})
 				.catch(e => { });
 			return;

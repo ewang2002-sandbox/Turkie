@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, GuildMember, RichEmbed, TextChannel } from "discord.js";
+import { Client, Message, GuildMember, MessageEmbed, TextChannel } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import { OtherUtilities } from "../../Utility/OtherUtilities";
 import { ModerationEnforcement } from "../../Handlers/ModerationEnforcement";
@@ -55,14 +55,14 @@ export default class Kick extends Command {
 			reason = "No reason provided";
 		}
 
-		if (message.author.id !== message.guild.ownerID && message.member.highestRole.comparePositionTo(member.highestRole) <= 0) {
+		if (message.author.id !== message.guild.ownerID && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) {
 			MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Role Hierarchy Error", "The person you are attempting to kick has equal or higher role permissions than you."));
 			return;
 		}
 
 
-		const d: RichEmbed = new RichEmbed()
-			.setAuthor(message.author.tag, message.author.avatarURL)
+		const d: MessageEmbed = new MessageEmbed()
+			.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 			.setTitle(`👢 **Kicked From: ${message.guild.name}**`)
 			.addField("Moderator", `${message.author} (${message.author.id})`)
 			.addField("Reason", reason)
@@ -73,8 +73,8 @@ export default class Kick extends Command {
 		await member.send(d).catch(e => { });
 		await member.kick(`[${message.author.tag}] ${reason}`);
 
-		const embed: RichEmbed = new RichEmbed()
-			.setAuthor(message.author.tag, message.author.avatarURL)
+		const embed: MessageEmbed = new MessageEmbed()
+			.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 			.setTitle("👢 **Kick Successful!**")
 			.setDescription("The user has been kicked successfully.")
 			.addField("Kicked User", `${member} (${member.id})`)

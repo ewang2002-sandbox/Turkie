@@ -1,4 +1,4 @@
-import { Client, GuildMember, RichEmbed, TextChannel, Collection, Invite, Guild, Role } from "discord.js";
+import { Client, GuildMember, MessageEmbed, TextChannel, Collection, Invite, Guild, Role } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../Models/TurkieBotGuild";
 import { EnhancedDates } from "../Utility/EnhancedDates";
 import { Colors } from "../Configuration/Configuration";
@@ -49,7 +49,9 @@ module.exports.run = async (client: Client, member: GuildMember): Promise<void> 
 			antiRaid[member.guild.id].push(member);
 			if (antiRaid[member.guild.id].length >= membersPermitted) {
 				antiRaid[member.guild.id].forEach(async member => {
-					await member.ban("Anti-raid is enabled and was triggered.");
+					await member.ban({
+						reason: "Anti-raid is enabled and was triggered."
+					}).catch(e => { });
 				});
 			}
 
@@ -64,7 +66,7 @@ module.exports.run = async (client: Client, member: GuildMember): Promise<void> 
 		// welcome msg
 		if (data.serverConfiguration.welcomeMessage.isEnabled
 			&& data.serverConfiguration.welcomeMessage.message.length !== 0) {
-			let toSend: RichEmbed | string;
+			let toSend: MessageEmbed | string;
 			let textToSend: string = data.serverConfiguration.welcomeMessage.message
 				.replace(/{author}/g, member.user.toString())
 				.replace(/{authorNickName}/g, member.displayName)
@@ -73,8 +75,8 @@ module.exports.run = async (client: Client, member: GuildMember): Promise<void> 
 				.replace(/{authorID}/g, member.user.id)
 				.replace(/{serverID}/g, member.guild.id);
 			if (data.serverConfiguration.welcomeMessage.embed) {
-				toSend = new RichEmbed()
-					.setAuthor(member.guild.name, member.guild.iconURL)
+				toSend = new MessageEmbed()
+					.setAuthor(member.guild.name, member.guild.iconURL({ format: "png" }))
 					.setColor(Colors.randomElement())
 					.setDescription(textToSend);
 			} else {
@@ -93,20 +95,20 @@ module.exports.run = async (client: Client, member: GuildMember): Promise<void> 
 				}
 			}
 			// add bulk roles.
-			member.addRoles(roles).catch(e => { });
+			member.roles.add(roles).catch(e => { });
 		}
 
 		// log
 		const date: EnhancedDates = new EnhancedDates();
 		if (data.serverConfiguration.serverLogs.joinLeaveLogs.isEnabled) {
-			const joinEmbed = new RichEmbed()
-				.setAuthor(member.user.tag, member.user.displayAvatarURL)
+			const joinEmbed = new MessageEmbed()
+				.setAuthor(member.user.tag, member.user.avatarURL({ format: "png" }))
 				.setTitle("📥 New Member Joined")
 				.setDescription(`${member} has joined ${member.guild.name}`)
 				.addField("Joined Server", MessageFunctions.codeBlockIt(EnhancedDates.formatUTCDate(member.joinedTimestamp)))
 				.addField("Registered Account", MessageFunctions.codeBlockIt(EnhancedDates.formatUTCDate(member.user.createdTimestamp)))
 				.addField("User ID", MessageFunctions.codeBlockIt(member.id))
-				.setThumbnail(member.user.displayAvatarURL)
+				.setThumbnail(member.user.avatarURL({ format: "png" }))
 				.setTimestamp()
 				.setColor(Colors.randomElement())
 				.setFooter("Turkie");

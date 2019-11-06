@@ -4,15 +4,17 @@
 	"description": "Turkie: A redesigned moderation bot written in TypeScript.",
 	"main": "Index.js",
 	"dependencies": {
-		"discord.js": "^11.5.1",
-		"mongoose": "^5.6.9",
+		"@discordjs/uws": "^11.149.1",
+		"discord.js": "github:discordjs/discord.js",
+		"mongoose": "^5.7.8",
 		"request": "^2.88.0"
 	},
 	"devDependencies": {
-		"@types/mongoose": "^5.5.12",
-		"@types/node": "^12.7.1",
-		"@types/request": "^2.48.2",
-		"typescript": "^3.5.3"
+		"@types/mongoose": "^5.5.29",
+		"@types/node": "^12.12.6",
+		"@types/request": "^2.48.3",
+		"@types/ws": "^6.0.3",
+		"typescript": "^3.7.2"
 	},
 	"scripts": {
 		"compile": "tsc -p .",

@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed, Guild, Invite, Collection } from "discord.js";
+import { Client, Message, MessageEmbed, Guild, Invite, Collection } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../../Models/TurkieBotGuild";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { Colors } from "../../Configuration/Configuration";
@@ -33,11 +33,11 @@ export default class ConfigServerLockdown extends Command {
 					MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 					return;
 				} else {
-					const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, `Server Lockdown ${!guildInfo.moderation.serverLockdown.isEnabled ? "Enabled" : "Disabled"}`, `${!guildInfo.moderation.serverLockdown.isEnabled ? `The server lockdown has been enabled successfully. Be sure to enable execute either \`${guildInfo.serverConfiguration.prefix}configserverlockdown enableall\` or add specific invite links.` : "The server lockdown has been disabled successfully."}`);
+					const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, `Server Lockdown ${!guildInfo.moderation.serverLockdown.isEnabled ? "Enabled" : "Disabled"}`, `${!guildInfo.moderation.serverLockdown.isEnabled ? `The server lockdown has been enabled successfully. Be sure to enable execute either \`${guildInfo.serverConfiguration.prefix}configserverlockdown enableall\` or add specific invite links.` : "The server lockdown has been disabled successfully."}`);
 					message.channel.send(embed)
 						.then(msg => {
 							msg = msg as Message;
-							msg.delete(5000);
+							msg.delete({ timeout: 5000 });
 						})
 						.catch(e => { });
 					return;
@@ -69,8 +69,8 @@ export default class ConfigServerLockdown extends Command {
 						status = "Enabled for All Invites";
 					}
 				}
-				const embed: RichEmbed = new RichEmbed()
-					.setAuthor(message.author.tag, message.author.avatarURL)
+				const embed: MessageEmbed = new MessageEmbed()
+					.setAuthor(message.author.tag, message.author.avatar)
 					.setTitle("**Server Lockdown Status**")
 					.setDescription(str)
 					.setColor(Colors.randomElement())
@@ -85,7 +85,7 @@ export default class ConfigServerLockdown extends Command {
 						MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 						return;
 					} else {
-						const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, `Server Lockdown For All Invites ${!guildInfo.moderation.serverLockdown.allInvites ? "Enabled" : "Disabled"}`, `${!guildInfo.moderation.serverLockdown.allInvites ? "The server lockdown for all invites has been enabled successfully." : "The server lockdown for all invites has been disabled successfully."}`);
+						const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, `Server Lockdown For All Invites ${!guildInfo.moderation.serverLockdown.allInvites ? "Enabled" : "Disabled"}`, `${!guildInfo.moderation.serverLockdown.allInvites ? "The server lockdown for all invites has been enabled successfully." : "The server lockdown for all invites has been disabled successfully."}`);
 						MessageFunctions.sendRichEmbed(message, embed);
 						return;
 					}
@@ -116,7 +116,7 @@ export default class ConfigServerLockdown extends Command {
 				if (isFound) {
 					this.removeInvFromDB(message, inviteCode).then(result => {
 						if (result) {
-							const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Invite Code Removed", `The invite code, \`${inviteCode}\`, was removed.`);
+							const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Invite Code Removed", `The invite code, \`${inviteCode}\`, was removed.`);
 							MessageFunctions.sendRichEmbed(message, embed);
 							return;
 						}
@@ -134,7 +134,7 @@ export default class ConfigServerLockdown extends Command {
 							MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 							return;
 						} else {
-							const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Inivte Link Added", `The invite code, \`${inviteCode}\`, was added.`);
+							const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Inivte Link Added", `The invite code, \`${inviteCode}\`, was added.`);
 							MessageFunctions.sendRichEmbed(message, embed);
 							return;
 						}

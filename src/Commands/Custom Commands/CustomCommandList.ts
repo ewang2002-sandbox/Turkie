@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed } from "discord.js";
+import { Client, Message, MessageEmbed } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { Colors } from "../../Configuration/Configuration.Sample";
@@ -29,8 +29,8 @@ export default class CustomCommandList extends Command {
 		}
 
 		let a: string[] = [];
-		const d = new RichEmbed()
-			.setAuthor(message.author.tag, message.author.avatarURL)
+		const d = new MessageEmbed()
+			.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 			.setTitle(`Custom Commands For: ${message.guild.name}`)
 			.setFooter("Custom Commands List")
 			.setColor(Colors.randomElement());

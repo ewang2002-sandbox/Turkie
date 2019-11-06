@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed } from "discord.js";
+import { Client, Message, MessageEmbed } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../../Models/TurkieBotGuild";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { MongoDB } from "../../Handlers/MongoDBHandler";
@@ -30,7 +30,7 @@ export default class ConfigOneRole extends Command {
 				MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 				return;
 			} else {
-				const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Configured Role Setting", `${!guildInfo.serverConfiguration.commands.mustHaveOneRole ? "Members must now have at least one role to use this bot's commands." : "Members no longer need a role to use bot commands."}`);
+				const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Configured Role Setting", `${!guildInfo.serverConfiguration.commands.mustHaveOneRole ? "Members must now have at least one role to use this bot's commands." : "Members no longer need a role to use bot commands."}`);
 				MessageFunctions.sendRichEmbed(message, embed);
 			}	
 		});

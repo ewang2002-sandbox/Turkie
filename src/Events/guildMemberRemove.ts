@@ -1,4 +1,4 @@
-import { Client, GuildMember, RichEmbed, TextChannel } from "discord.js";
+import { Client, GuildMember, MessageEmbed, TextChannel } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../Models/TurkieBotGuild";
 import { EnhancedDates } from "../Utility/EnhancedDates";
 import { Colors } from "../Configuration/Configuration";
@@ -12,12 +12,12 @@ module.exports.run = async (client: Client, member: GuildMember): Promise<void> 
 
 		const date: EnhancedDates = new EnhancedDates();
 		if (data.serverConfiguration.serverLogs.joinLeaveLogs.isEnabled) {
-			const left: RichEmbed = new RichEmbed()
-				.setAuthor(member.user.tag, member.user.displayAvatarURL)
+			const left: MessageEmbed = new MessageEmbed()
+				.setAuthor(member.user.tag, member.user.avatarURL({ format: "png" }))
 				.setTitle("📤 Member Left")
 				.setDescription(`${member} has left ${member.guild.name}`)
 				.addField("User ID", MessageFunctions.codeBlockIt(member.id), true)
-				.setThumbnail(member.user.displayAvatarURL)
+				.setThumbnail(member.user.avatarURL({ format: "png" }))
 				.setTimestamp()
 				.setColor(Colors.randomElement())
 				.setFooter("Turkie");

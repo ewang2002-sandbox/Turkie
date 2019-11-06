@@ -1,4 +1,4 @@
-import { Message, RichEmbed, User, Client, OAuth2Application, Collection, Permissions, Guild } from 'discord.js';
+import { Message, MessageEmbed, User, Client, Collection, Permissions, Guild } from 'discord.js';
 import { DefaultPrefix } from "../Configuration/Configuration";
 import { Command } from "../Models/Command";
 import { CommandManager } from "../Utility/CommandManager";
@@ -24,8 +24,8 @@ export class CommandHandler {
 		if (this.msg.author.bot) {
 			return;
 		}
-		let app: OAuth2Application = await this.msg.client.fetchApplication();
-		let owner: User = await this.msg.client.fetchUser(app.owner.id);
+		let app = await this.msg.client.fetchApplication();
+		let owner: User = await this.msg.client.users.fetch(app.owner.id);
 
 		let possPrefixes: string[];
 		if (this.msg.guild) { // if guild load guild prefix.
@@ -56,7 +56,7 @@ export class CommandHandler {
 			// check to see if the bot owner can use this command only.
 			if (execCommand.botOwnerOnly) {
 				if (this.msg.author.id !== owner.id) {
-					let errNoOwner: RichEmbed = MessageFunctions.createMsgEmbed(this.msg, "Denied", "You are not the bot's owner.");
+					let errNoOwner: MessageEmbed = MessageFunctions.createMsgEmbed(this.msg, "Denied", "You are not the bot's owner.");
 					MessageFunctions.sendRichEmbed(this.msg, errNoOwner);
 					return;
 				}
@@ -64,7 +64,7 @@ export class CommandHandler {
 
 			// check to see if command is for guild only.
 			if (execCommand.guildOnly && !this.msg.guild) {
-				let cmdNoGuild: RichEmbed = MessageFunctions.createMsgEmbed(this.msg, "Command Guild Only", "The command can only be used in a guild.");
+				let cmdNoGuild: MessageEmbed = MessageFunctions.createMsgEmbed(this.msg, "Command Guild Only", "The command can only be used in a guild.");
 				MessageFunctions.sendRichEmbed(this.msg, cmdNoGuild).catch(e => { });
 				return;
 			}
@@ -78,19 +78,19 @@ export class CommandHandler {
 				
 				// one role is enabled & the person has no role (@everyone is given to everyone and cannot be removed, so the size is 1.)
 				if (this.guildInfo.serverConfiguration.commands.mustHaveOneRole && this.msg.member.roles.size === 1) {
-					let lessThanReq: RichEmbed = MessageFunctions.createMsgEmbed(this.msg, "Need At Least One Role", "You must have at least one visible role on your account in this server to use commands");
+					let lessThanReq: MessageEmbed = MessageFunctions.createMsgEmbed(this.msg, "Need At Least One Role", "You must have at least one visible role on your account in this server to use commands");
 					MessageFunctions.sendRichEmbed(this.msg, lessThanReq);
 					return;
 				}
 
 				// must have one role
 				if (this.guildInfo.serverConfiguration.commands.mustHaveOneRole && this.msg.member.roles.size === 0) {
-					let noRoles: RichEmbed = MessageFunctions.createMsgEmbed(this.msg, "No Roles", "You must have at least one role to run this command.");
+					let noRoles: MessageEmbed = MessageFunctions.createMsgEmbed(this.msg, "No Roles", "You must have at least one role to run this command.");
 					MessageFunctions.sendRichEmbed(this.msg, noRoles);
 					return;
 				}
 
-				let memberPerms: Permissions = this.msg.member.permissions,
+				let memberPerms: Readonly<Permissions> = this.msg.member.permissions,
 					hasPermissions: boolean = false;
 				if (execCommand.userPermissions.length !== 0) {
 					for (let i = 0; i < execCommand.userPermissions.length; i++) {
@@ -101,14 +101,14 @@ export class CommandHandler {
 					}
 
 					if (!hasPermissions) {
-						let noPermissions: RichEmbed = MessageFunctions.createMsgEmbed(this.msg, "No Permissions", `You do not have permissions to run this command. You require the following permissions in this channel:\n\`\`\`css\n${execCommand.userPermissions.join(", ")}\`\`\``);
+						let noPermissions: MessageEmbed = MessageFunctions.createMsgEmbed(this.msg, "No Permissions", `You do not have permissions to run this command. You require the following permissions in this channel:\n\`\`\`css\n${execCommand.userPermissions.join(", ")}\`\`\``);
 						MessageFunctions.sendRichEmbed(this.msg, noPermissions);
 						return;
 					}
 				}
 
 				// check bot perms
-				let botPerms: Permissions = this.msg.guild.me.permissions,
+				let botPerms: Readonly<Permissions> = this.msg.guild.me.permissions,
 					hasNeededPerms: boolean = false;
 				if (execCommand.botPermissions.length !== 0) {
 					for (let i = 0; i < execCommand.botPermissions.length; i++) {
@@ -119,7 +119,7 @@ export class CommandHandler {
 					}
 
 					if (!hasNeededPerms) {
-						let noPermissions: RichEmbed = MessageFunctions.createMsgEmbed(this.msg, "No Permissions", `The bot does not have permissions to run this command. The bot requires the following permissions:\n\`\`\`css\n${execCommand.botPermissions.join(", ")}\`\`\``);
+						let noPermissions: MessageEmbed = MessageFunctions.createMsgEmbed(this.msg, "No Permissions", `The bot does not have permissions to run this command. The bot requires the following permissions:\n\`\`\`css\n${execCommand.botPermissions.join(", ")}\`\`\``);
 						MessageFunctions.sendRichEmbed(this.msg, noPermissions);
 						return;
 					}
@@ -128,7 +128,7 @@ export class CommandHandler {
 
 			// check arg length.
 			if (execCommand.argsLength > args.length) {
-				let helpErrEmbed: RichEmbed = cmdManager.helpCommand();
+				let helpErrEmbed: MessageEmbed = cmdManager.helpCommand();
 				this.msg.channel.send(helpErrEmbed).catch(e => { });
 				return;
 			}
@@ -161,10 +161,10 @@ export class CommandHandler {
 						.replace(/{serverID}/g, "" + this.msg.guild.id);
 	
 	
-					let toSend: string | RichEmbed;
+					let toSend: string | MessageEmbed;
 					if (ccData.embed) {
-						toSend = new RichEmbed()
-							.setAuthor(this.msg.author.tag, this.msg.author.avatarURL)
+						toSend = new MessageEmbed()
+							.setAuthor(this.msg.author.tag, this.msg.author.avatarURL({ format: "png" }))
 							.setColor(Colors.randomElement())
 							.setDescription(textToSend);
 					} else {

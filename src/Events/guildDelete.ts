@@ -1,4 +1,4 @@
-import { Client, Guild, RichEmbed, Message, TextChannel } from "discord.js";
+import { Client, Guild, MessageEmbed, Message, TextChannel } from "discord.js";
 import { EnhancedDates } from "../Utility/EnhancedDates";
 import { LogGuildAddRemove } from "../Configuration/Constants";
 import { MongoDB } from "../Handlers/MongoDBHandler";
@@ -6,8 +6,8 @@ import { Colors } from "../Configuration/Configuration";
 
 module.exports.run = async (client: Client, guild: Guild): Promise<void> => {
 	const time: EnhancedDates = new EnhancedDates();
-	const embed: RichEmbed = new RichEmbed()
-		.setAuthor(guild.name, guild.iconURL)
+	const embed: MessageEmbed = new MessageEmbed()
+		.setAuthor(guild.name, guild.iconURL({ format: "png" }))
 		.setTitle("📤 Left Guild")
 		.setDescription(`The bot was kicked at ${EnhancedDates.formatUTCDate(time.getTime())}.`)
 		.addField("Member Count", guild.memberCount, true)

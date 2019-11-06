@@ -1,4 +1,4 @@
-import { Turkie } from "./Bot";
+import { TurkieBot } from "./TurkieBot";
 import { Token } from "./Configuration/Configuration";
 import Log from "./Utility/Log";
 
@@ -6,8 +6,8 @@ import Log from "./Utility/Log";
 require("./Prototypes/Array.prototype");
 require("./Prototypes/String.prototype");
 
-const TurkieBot = new Turkie(Token);
-TurkieBot.login();
+const tb = new TurkieBot(Token);
+tb.login();
 
 process.on("uncaughtException", (error) => {
 	const l: Log = new Log(error);

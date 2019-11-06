@@ -34,13 +34,13 @@ export default class BotPing extends Command {
 		});
 
 		await this.pingTimes.push(responseMessage.createdTimestamp - message.createdTimestamp);
-		await this.apiTimes.push(client.ping);
+		await this.apiTimes.push(client.ws.ping);
 
 		await responseMessage.edit({
 			embed: {
 				author: {
 					name: message.author.tag,
-					icon_url: message.author.displayAvatarURL
+					icon_url: message.author.avatarURL({ format: "png" })
 				},
 				color: Colors.randomElement(),
 				title: `${client.user.tag} Ping Statistics`,
@@ -51,7 +51,7 @@ export default class BotPing extends Command {
 				},
 				{
 					name: 'WebSocket/API Ping',
-					value: MessageFunctions.codeBlockIt(`${(client.ping).toFixed(2)} MS`),
+					value: MessageFunctions.codeBlockIt(`${(client.ws.ping).toFixed(2)} MS`),
 					inline: true
 				},
 				{
@@ -60,7 +60,7 @@ export default class BotPing extends Command {
 				},
 				{
 					name: 'Average Websocket/API Ping',
-					value: MessageFunctions.codeBlockIt(`${this.apiTimes.length === 0 ? Math.round(client.ping).toFixed(2) : (this.apiTimes.reduce((p, c) => { return p + c }) / this.apiTimes.length).toFixed(2)} MS`),
+					value: MessageFunctions.codeBlockIt(`${this.apiTimes.length === 0 ? Math.round(client.ws.ping).toFixed(2) : (this.apiTimes.reduce((p, c) => { return p + c }) / this.apiTimes.length).toFixed(2)} MS`),
 					inline: true
 				}
 				],

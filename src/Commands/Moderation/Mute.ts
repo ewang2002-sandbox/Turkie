@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, GuildMember, RichEmbed, TextChannel } from "discord.js";
+import { Client, Message, GuildMember, MessageEmbed, TextChannel } from "discord.js";
 import { GuildInterface } from "../../Models/TurkieBotGuild";
 import { ModerationEnforcement } from "../../Handlers/ModerationEnforcement";
 import { OtherUtilities } from "../../Utility/OtherUtilities";
@@ -47,7 +47,7 @@ export default class Mute extends Command {
 			return;
 		}
 
-		if (message.author.id !== message.guild.ownerID && message.member.highestRole.comparePositionTo(member.highestRole) <= 0) {
+		if (message.author.id !== message.guild.ownerID && message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) {
 			MessageFunctions.sendRichEmbed(message, MessageFunctions.createMsgEmbed(message, "Role Hierarchy Error", "The person you are attempting to unmute has equal or higher role permissions than you."));
 			return;
 		}
@@ -70,8 +70,8 @@ export default class Mute extends Command {
 		await me.muteUser(member, unmuteDuration, reason);
 
 		// modlog
-		const embed: RichEmbed = new RichEmbed()
-			.setAuthor(message.author.tag, message.author.avatarURL)
+		const embed: MessageEmbed = new MessageEmbed()
+			.setAuthor(message.author.tag, message.author.avatarURL({ format: "png" }))
 			.setTitle("🔇 **Mute Successful!**")
 			.setDescription("The user has been muted successfully.")
 			.addField("Muted User", `${member} (${member.id})`)

@@ -1,26 +1,26 @@
-import { Client, PresenceStatus, OAuth2Application, User, ActivityType, Guild } from "discord.js";
+import { Client, PresenceStatus, User, ActivityType, Guild, PresenceData, PresenceStatusData } from "discord.js";
 import { EnhancedDates } from "../Utility/EnhancedDates";
 import TurkieBotGuild, { GuildInterface } from "../Models/TurkieBotGuild";
 import { MongoDB } from "../Handlers/MongoDBHandler";
 
 module.exports.run = async (client: Client): Promise<void> => {
-	const statuses: { Type: ActivityType, Game: string }[] = [
+	const statuses: PresenceData["activity"][] = [
 		{
-			"Type": "PLAYING",
-			"Game": "Visual Studio Code"
+			"type": "PLAYING",
+			"name": "Visual Studio Code"
 		},
 		{
-			"Type": "PLAYING",
-			"Game": "With My Best Friends"
+			"type": "PLAYING",
+			"name": "With My Best Friends"
 		},
 		{
-			"Type": "PLAYING",
-			"Game": "Minecraft"
+			"type": "PLAYING",
+			"name": "Minecraft"
 		}
 	];
 
 	// possible presense for the bot.
-	const presense: PresenceStatus[] = [
+	const presense: PresenceStatusData[] = [
 		"online",
 		"idle",
 		"dnd"
@@ -30,9 +30,9 @@ module.exports.run = async (client: Client): Promise<void> => {
 	setInterval(() => {
 		const status = statuses.randomElement();
 		client.user.setPresence({
-			game: {
-				name: status["Game"],
-				type: status["Type"]
+			activity: {
+				name: status["name"],
+				type: status["type"]
 			},
 			status: presense.randomElement()
 		});
@@ -40,8 +40,8 @@ module.exports.run = async (client: Client): Promise<void> => {
 
 	let date = new EnhancedDates();
 	// get info
-	let app: OAuth2Application = await client.fetchApplication();
-	let owner: User = await client.fetchUser(app.owner.id);
+	let app = await client.fetchApplication();
+	let owner: User = await client.users.fetch(app.owner.id);
 	console.log('\x1b[36m%s\x1b[0m', `${client.user.tag} has started on ${EnhancedDates.formatUTCDate(date.getTime())}.\nBOT TAG: ${client.user.tag}\nBOT ID: ${client.user.id}\nOWNER TAG: ${owner.tag}\nOWNER ID: ${owner.id}`);
 
 

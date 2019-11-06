@@ -1,5 +1,5 @@
 import { Command } from "../../Models/Command";
-import { Client, Message, RichEmbed } from "discord.js";
+import { Client, Message, MessageEmbed } from "discord.js";
 import TurkieBotGuild, { GuildInterface } from "../../Models/TurkieBotGuild";
 import MessageFunctions from "../../Utility/MessageFunctions";
 import { MongoDB } from "../../Handlers/MongoDBHandler";
@@ -30,7 +30,7 @@ export default class DeletePinNotification extends Command {
 				MongoDB.MongoDBGuildHandler.sendErrorEmbed(message);
 				return;
 			} else {
-				const embed: RichEmbed = MessageFunctions.createMsgEmbed(message, "Pin Notification Deletion Updated", `${!guildInfo.serverConfiguration.deletePinNotifications ? "The bot will now delete all pin notification messages." : "The bot will no longer delete all pin notification messages."}`);
+				const embed: MessageEmbed = MessageFunctions.createMsgEmbed(message, "Pin Notification Deletion Updated", `${!guildInfo.serverConfiguration.deletePinNotifications ? "The bot will now delete all pin notification messages." : "The bot will no longer delete all pin notification messages."}`);
 				MessageFunctions.sendRichEmbed(message, embed);
 			}
 		});
