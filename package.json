@@ -6,7 +6,7 @@
 	"dependencies": {
 		"@discordjs/uws": "^11.149.1",
 		"discord.js": "github:discordjs/discord.js",
-		"mongoose": "^5.7.8",
+		"mongoose": "^5.7.13",
 		"request": "^2.88.0"
 	},
 	"devDependencies": {
