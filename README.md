@@ -1,3 +1,5 @@
+**NOTICE:** For the time being, I have stopped the development of Turkie so I can focus on the development of another bot. I will continue to work on Turkie once I finish developing the other bot. Thank you for understanding! 
+
 ![Turkie Logo, Thanks to Cassie!](https://github.com/ewang20027/Turkie/blob/master/images/Turkie.png)
 
 A complete rewrite of my JavaScript-based Discord bot, TurkieBot; Turkie, which is completely rewritten in TypeScript, is focused mainly on moderation. This bot was my submission to the Discord Hack Week contest.
